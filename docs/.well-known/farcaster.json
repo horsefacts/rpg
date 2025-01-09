@@ -1,0 +1,17 @@
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjM2MjEsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgyY2Q4NWEwOTMyNjFmNTkyNzA4MDRBNkVBNjk3Q2VBNENlQkVjYWZFIn0",
+    "payload": "eyJkb21haW4iOiJob3JzZWZhY3RzLmdpdGh1Yi5pbyJ9",
+    "signature": "MHhlODNkMjZmN2IwN2JkMjVlZjYyZWIxNWRmMmU5OGVlYWQ2MjIzMDc1YTk5Y2U0ZGFjMTUyODAwMWI1ZTU3N2RhMTM3YzQ5Yzk2ZmY3NjRlYzYzMzk1MjdlZWEzZWJmYTUzMTQ5YjJiNjE3MjFjNWYwNzA3MWEwZGU4MDk4ZjVmNjFj"
+  },
+  "frame": {
+    "version": "1",
+    "name": "SmartHome",
+    "iconUrl": "https://horsefacts.github.io/rpg/splash.png",
+    "homeUrl": "https://horsefacts.github.io/rpg/",
+    "imageUrl": "https://horsefacts.github.io/rpg/frame.png",
+    "buttonTitle": "Play",
+    "splashImageUrl": "https://horsefacts.github.io/rpg/splash.png",
+    "splashBackgroundColor": "#19120b"
+  }
+}

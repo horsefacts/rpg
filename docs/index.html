@@ -1,950 +1,1107 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <title>SmartHome</title>
-  <link rel="shortcut icon" type="image/x-icon" href="./favicon.svg" id="favicon">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#000" />
+  <head>
+    <meta charset="utf-8" />
+    <title>SmartHome</title>
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="./favicon.svg"
+      id="favicon"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000" />
 
-  <meta name="description" content="SmartHome: An Adventure Game">
-  <meta name="keywords" content="smart home, smart, home, smarthome, smart home an adventure game, smarthome an adventure game, adventure game, adventure, game, art game, text adventure, rpg, role play game, steviep, steve pikelny, pikelny, crypto, purgatory, hell, yield farmer 2, SmartOS, trapped, currency xchange, money miner, payapp, smartplanter, homegrid, jailbreakr, plantasia, simulator, idle game, clicker, incremental game, idle, incremental, html, web game, free game, cozy game">
+    <meta name="description" content="SmartHome: An Adventure Game" />
+    <meta
+      name="keywords"
+      content="smart home, smart, home, smarthome, smart home an adventure game, smarthome an adventure game, adventure game, adventure, game, art game, text adventure, rpg, role play game, steviep, steve pikelny, pikelny, crypto, purgatory, hell, yield farmer 2, SmartOS, trapped, currency xchange, money miner, payapp, smartplanter, homegrid, jailbreakr, plantasia, simulator, idle game, clicker, incremental game, idle, incremental, html, web game, free game, cozy game"
+    />
 
-  <meta name="twitter:image" content="https://smarthome.steviep.xyz/SmartHome.png">
-  <meta name="twitter:image:alt" content="SmartHome: An Adventure Game">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:creator" content="@steviepxyz">
-  <meta name="twitter:site" content="@steviepxyz">
-  <meta property="twitter:description" content="SmartHome: An Adventure Game">
+    <meta
+      name="twitter:image"
+      content="https://smarthome.steviep.xyz/SmartHome.png"
+    />
+    <meta name="twitter:image:alt" content="SmartHome: An Adventure Game" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@steviepxyz" />
+    <meta name="twitter:site" content="@steviepxyz" />
+    <meta
+      property="twitter:description"
+      content="SmartHome: An Adventure Game"
+    />
 
-  <meta name="og:image" property="og:image" content="https://smarthome.steviep.xyz/SmartHome.png">
-  <meta name="og:image:alt" content="SmartHome: An Adventure Game">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://smarthome.steviep.xyz/">
-  <meta property="og:title" content="SmartHome">
-  <meta property="og:site_name" content="SmartHome">
-  <meta property="og:description" content="SmartHome: An Adventure Game">
+    <meta
+      name="og:image"
+      property="og:image"
+      content="https://smarthome.steviep.xyz/SmartHome.png"
+    />
+    <meta name="og:image:alt" content="SmartHome: An Adventure Game" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://smarthome.steviep.xyz/" />
+    <meta property="og:title" content="SmartHome" />
+    <meta property="og:site_name" content="SmartHome" />
+    <meta property="og:description" content="SmartHome: An Adventure Game" />
 
+    <link rel="stylesheet" type="text/css" href="./styles.css" />
 
-  <link rel="stylesheet" type="text/css" href="./styles.css">
-</head>
-<body>
+    <meta name="fc:frame" content='{
+      "version": "next",
+      "imageUrl": "https://horsefacts.github.io/rpg/frame.png",
+      "button":{
+        "title": "Play",
+        "action": {
+          "type": "launch_frame",
+          "name": "SmartHome",
+          "url": "https://horsefacts.github.io/rpg/",
+          "splashImageUrl": "https://horsefacts.github.io/rpg/splash.png",
+          "splashBackgroundColor": "#19120B"
+        }
+      }
+    }' />
+    <script src="https://cdn.jsdelivr.net/npm/@farcaster/frame-sdk/dist/index.min.js"></script>
+  </head>
+  <body>
+    <script type="module">
+      import { ls } from "./$.js";
 
-<script type="module">
-  import {ls} from './$.js'
+      window.GAME_VERSION = 12;
+      window.SMARTHOME_GAME_VERSION = window.GAME_VERSION;
 
-  window.GAME_VERSION = 12
-  window.SMARTHOME_GAME_VERSION = window.GAME_VERSION
+      const LAST_PLAYED_GAME_VERSION = ls.get("__GAME_VERSION");
+      if (LAST_PLAYED_GAME_VERSION !== GAME_VERSION) {
+        localStorage.clear();
+      }
+      ls.set("__GAME_VERSION", GAME_VERSION);
 
-  const LAST_PLAYED_GAME_VERSION = ls.get('__GAME_VERSION')
-  if (LAST_PLAYED_GAME_VERSION !== GAME_VERSION) {
-    localStorage.clear()
-  }
-  ls.set('__GAME_VERSION', GAME_VERSION)
+      console.log(
+        `Need a hint? See the help page: \nhttps://smarthome.steviep.xyz/help`
+      );
+      console.log(`Please report all bugs here: \nhttp://discord.steviep.xyz`);
+    </script>
 
-  console.log(`Need a hint? See the help page: \nhttps://smarthome.steviep.xyz/help`)
-  console.log(`Please report all bugs here: \nhttp://discord.steviep.xyz`)
-</script>
+    <main id="currentDisplay">
+      <section id="mainConsole">
+        <header>
+          <span id="consoleLocation"></span><time id="consoleTime"></time
+          ><span id="consoleTemperature"></span>
+        </header>
+        <section id="mainConsolePrimary">
+          <section id="mainConsoleContent"></section>
 
-
-  <main id="currentDisplay">
-    <section id="mainConsole">
-      <header><span id="consoleLocation"></span><time id="consoleTime"></time><span id="consoleTemperature"></span></header>
-      <section id="mainConsolePrimary">
-        <section id="mainConsoleContent"></section>
-
-        <aside>
-          <div id="nextActions"></div>
-          <div id="notebook" style="transition: 0.3s;" class="invisible hidden">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.1em;">
-              <h4>eNotepad</h4>
-              <div id="notepadActions">
-                <span id="eNotepadBattery">[97%]</span>
-                <button id="pluginENotepad">Plug In</button>
-                <button id="pairWithNotes">Sync Notes</button>
-                <!-- <button>Factory Reset</button> -->
+          <aside>
+            <div id="nextActions"></div>
+            <div
+              id="notebook"
+              style="transition: 0.3s"
+              class="invisible hidden"
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 0.1em;
+                "
+              >
+                <h4>eNotepad</h4>
+                <div id="notepadActions">
+                  <span id="eNotepadBattery">[97%]</span>
+                  <button id="pluginENotepad">Plug In</button>
+                  <button id="pairWithNotes">Sync Notes</button>
+                  <!-- <button>Factory Reset</button> -->
+                </div>
               </div>
+              <div id="eNotepadError" style="text-align: right"></div>
+              <textarea id="eNotepadTextArea" style="margin-top: 0.4em">
+ERROR: Cannot access Library </textarea
+              >
             </div>
-            <div id="eNotepadError" style="text-align: right;"></div>
-            <textarea id="eNotepadTextArea" style="margin-top: 0.4em;">ERROR: Cannot access Library </textarea>
-          </div>
-        </aside>
-      </section>
+          </aside>
+        </section>
 
-      <div id="sleepModal">
-        <div style="display: flex; align-items: center; flex-direction: column; ">
-          <a href="./help" target="_blank"><span id="landingLogo"></span></a>
-          <h2 style="font-weight: normal; font-size: 1.9em; margin-top: 0.1em;">SmartHome</h2>
+        <div id="sleepModal">
+          <div
+            style="display: flex; align-items: center; flex-direction: column"
+          >
+            <a href="./help" target="_blank"><span id="landingLogo"></span></a>
+            <h2
+              style="font-weight: normal; font-size: 1.9em; margin-top: 0.1em"
+            >
+              SmartHome
+            </h2>
 
-          <!--
+            <!--
           <h3 style="font-weight: normal; font-size: 0.9em; height: 0; transform: translate(100px, -23px);" class="blink">BETA</h3>
           -->
 
-          <h3 style="font-weight: normal; font-size: 0.9em; margin-top: 0.1em;">[An Adventure Game]</h3>
-          <h4 style="font-weight: normal; font-size: 0.75em; margin-top: 0.1em; display: flex; justify-content: space-evenly; width: 100%;"><a id="steviep" href="https://steviep.xyz" target="_blank">steviep.xyz</a></h4>
+            <h3
+              style="font-weight: normal; font-size: 0.9em; margin-top: 0.1em"
+            >
+              [An Adventure Game]
+            </h3>
+            <h4
+              style="
+                font-weight: normal;
+                font-size: 0.75em;
+                margin-top: 0.1em;
+                display: flex;
+                justify-content: space-evenly;
+                width: 100%;
+              "
+            >
+              <a id="steviep" href="https://steviep.xyz" target="_blank"
+                >steviep.xyz</a
+              >
+            </h4>
+          </div>
         </div>
-      </div>
+      </section>
 
-    </section>
+      <trapped-modal id="phoneModal" blur="true">
+        <mobile-phone id="phoneDevice" slot="content"></mobile-phone>
+      </trapped-modal>
 
+      <trapped-modal id="tvModal" blur="true">
+        <smart-tv id="tvDevice" slot="content"></smart-tv>
+      </trapped-modal>
 
-    <trapped-modal id="phoneModal" blur="true">
-      <mobile-phone id="phoneDevice" slot="content"></mobile-phone>
-    </trapped-modal>
+      <trapped-modal id="gateLinkModal" blur="true">
+        <gate-link id="gateLinkDevice" slot="content"></gate-link>
+      </trapped-modal>
 
-    <trapped-modal id="tvModal" blur="true">
-      <smart-tv id="tvDevice" slot="content"></smart-tv>
-    </trapped-modal>
+      <trapped-modal id="smartFrameModal" blur="true">
+        <smart-frame id="smartFrameDevice" slot="content"></smart-frame>
+      </trapped-modal>
+    </main>
+  </body>
 
-    <trapped-modal id="gateLinkModal" blur="true">
-      <gate-link id="gateLinkDevice" slot="content"></gate-link>
-    </trapped-modal>
+  <script src="./utils.js"></script>
+  <script type="module" src="./modal.js"></script>
+  <script type="module" src="./mobilePhone.js"></script>
+  <script type="module" src="./smartTV.js"></script>
+  <script type="module" src="./gateLink.js"></script>
+  <script type="module" src="./smartFrame.js"></script>
 
-    <trapped-modal id="smartFrameModal" blur="true">
-      <smart-frame id="smartFrameDevice" slot="content"></smart-frame>
-    </trapped-modal>
-  </main>
+  <script type="module">
+    import { $ } from "./$.js";
+    import { StateMachine, CTX } from "./stateMachine.js";
+    import { persist } from "./persist.js";
+    import { globalState, setColors, tmp } from "./global.js";
+    import { createSource, MAX_VOLUME, SoundSrc } from "./audio.js";
+    import { funTimeText } from "./mobilePhone.js";
+    import { setupAnalytics } from "./analytics.js";
 
-</body>
+    setupAnalytics();
 
+    const $phoneModal = $.id("phoneModal");
+    const $gateLinkModal = $.id("gateLinkModal");
+    const $tvModal = $.id("tvModal");
+    const $smartFrameModal = $.id("smartFrameModal");
 
+    const $phoneDevice = $.id("phoneDevice");
+    const $tvDevice = $.id("tvDevice");
+    const $smartFrameDevice = $.id("smartFrameDevice");
+    const $gateLinkDevice = $.id("gateLinkDevice");
+    const $consoleLocation = $.id("consoleLocation");
+    const $consoleTime = $.id("consoleTime");
+    const $consoleTemperature = $.id("consoleTemperature");
+    window.$phoneDevice = $phoneDevice;
+    window.$tvDevice = $tvDevice;
+    window.$gateLinkDevice = $gateLinkDevice;
 
-<script src="./utils.js"></script>
-<script type="module" src="./modal.js"></script>
-<script type="module" src="./mobilePhone.js"></script>
-<script type="module" src="./smartTV.js"></script>
-<script type="module" src="./gateLink.js"></script>
-<script type="module" src="./smartFrame.js"></script>
+    window.createSource = createSource;
 
+    // let eCount = 0
+    // let lastE = 0
+    // document.addEventListener('keyup', e => {
+    //   if (e.key === 'E') {
+    //     if (lastE > Date.now() - 1000) {
+    //       eCount += 1
+    //       if (eCount >= 10) {
+    //         $.id('notebook').classList.remove('hidden')
+    //         setTimeout(() => {
+    //           $.id('notebook').classList.remove('invisible')
+    //         }, 10)
+    //         setTimeout(() => {
+    //           $.id('eNotepadTextArea').focus()
+    //           $.id('eNotepadTextArea').selectionEnd = 80
+    //           $.id('eNotepadTextArea').selectionStart = 80
+    //         }, 100)
+    //       }
+    //     } else {
+    //       eCount = 1
+    //     }
+    //     lastE = Date.now()
+    //   }
+    // })
 
+    $.id("eNotepadBattery").innerHTML = `[${globalState.eNotepadBattery}%]`;
+    $.id("eNotepadTextArea").innerHTML = globalState.eNotepadContent;
 
-<script type="module">
-  import {$} from './$.js'
-  import {StateMachine, CTX} from './stateMachine.js'
-  import {persist} from './persist.js'
-  import {globalState, setColors, tmp} from './global.js'
-  import {createSource, MAX_VOLUME, SoundSrc} from './audio.js'
-  import {funTimeText} from './mobilePhone.js'
-  import {setupAnalytics} from './analytics.js'
+    function pluginENotepad() {
+      globalState.eNotepadOpen = false;
 
-  setupAnalytics()
-
-
-
-
-  const $phoneModal = $.id('phoneModal')
-  const $gateLinkModal = $.id('gateLinkModal')
-  const $tvModal = $.id('tvModal')
-  const $smartFrameModal = $.id('smartFrameModal')
-
-  const $phoneDevice = $.id('phoneDevice')
-  const $tvDevice = $.id('tvDevice')
-  const $smartFrameDevice = $.id('smartFrameDevice')
-  const $gateLinkDevice = $.id('gateLinkDevice')
-  const $consoleLocation = $.id('consoleLocation')
-  const $consoleTime = $.id('consoleTime')
-  const $consoleTemperature = $.id('consoleTemperature')
-  window.$phoneDevice = $phoneDevice
-  window.$tvDevice = $tvDevice
-  window.$gateLinkDevice = $gateLinkDevice
-
-  window.createSource = createSource
-
-
-
-  // let eCount = 0
-  // let lastE = 0
-  // document.addEventListener('keyup', e => {
-  //   if (e.key === 'E') {
-  //     if (lastE > Date.now() - 1000) {
-  //       eCount += 1
-  //       if (eCount >= 10) {
-  //         $.id('notebook').classList.remove('hidden')
-  //         setTimeout(() => {
-  //           $.id('notebook').classList.remove('invisible')
-  //         }, 10)
-  //         setTimeout(() => {
-  //           $.id('eNotepadTextArea').focus()
-  //           $.id('eNotepadTextArea').selectionEnd = 80
-  //           $.id('eNotepadTextArea').selectionStart = 80
-  //         }, 100)
-  //       }
-  //     } else {
-  //       eCount = 1
-  //     }
-  //     lastE = Date.now()
-  //   }
-  // })
-
-
-  $.id('eNotepadBattery').innerHTML = `[${globalState.eNotepadBattery}%]`
-  $.id('eNotepadTextArea').innerHTML = globalState.eNotepadContent
-
-  function pluginENotepad() {
-    globalState.eNotepadOpen = false
-
-    $.id('notebook').classList.add('invisible')
-    setTimeout(() => {
-      $.id('notebook').classList.add('hidden')
-    }, 350)
-
-
-    setTimeout(() => {
-      $.id('eNotepadTextArea').classList.remove('disabled')
-    }, 500)
-
-
-    clearInterval(tmp.eNotePadInterval)
-
-    tmp.eNotePadInterval = setInterval(() => {
-      if (globalState.eNotepadBattery < 100) globalState.eNotepadBattery += 1
-    }, 4000)
-  }
-
-  const updateNotepadStorage = () => globalState.eNotepadContent = $.id('eNotepadTextArea').value
-
-  $.id('eNotepadTextArea').onkeyup = updateNotepadStorage
-  $.id('eNotepadTextArea').onpaste = updateNotepadStorage
-
-  $.id('pluginENotepad').onclick = pluginENotepad
-
-  $.id('pairWithNotes').onclick = () => {
-    if (isNaN($phoneDevice.state.notepadUser)) {
-      $.id('eNotepadTextArea').value = 'Please download the *NotePad* app and pair with this device to sync notes'
-        updateNotepadStorage()
-    } else {
-      $.id('eNotepadTextArea').value = 'Syncing...'
+      $.id("notebook").classList.add("invisible");
+      setTimeout(() => {
+        $.id("notebook").classList.add("hidden");
+      }, 350);
 
       setTimeout(() => {
-        $.id('eNotepadTextArea').value = $phoneDevice.state.userData[$phoneDevice.state.notepadUser].notePadValue
-        $.id('eNotepadTextArea').focus()
-        updateNotepadStorage()
-      }, 500)
+        $.id("eNotepadTextArea").classList.remove("disabled");
+      }, 500);
+
+      clearInterval(tmp.eNotePadInterval);
+
+      tmp.eNotePadInterval = setInterval(() => {
+        if (globalState.eNotepadBattery < 100) globalState.eNotepadBattery += 1;
+      }, 4000);
     }
-  }
 
+    const updateNotepadStorage = () =>
+      (globalState.eNotepadContent = $.id("eNotepadTextArea").value);
 
-  function unplugENotepad() {
-    globalState.eNotepadOpen = true
+    $.id("eNotepadTextArea").onkeyup = updateNotepadStorage;
+    $.id("eNotepadTextArea").onpaste = updateNotepadStorage;
 
-    $.id('eNotepadBattery').innerHTML = `[${globalState.eNotepadBattery}%]`
+    $.id("pluginENotepad").onclick = pluginENotepad;
 
+    $.id("pairWithNotes").onclick = () => {
+      if (isNaN($phoneDevice.state.notepadUser)) {
+        $.id("eNotepadTextArea").value =
+          "Please download the *NotePad* app and pair with this device to sync notes";
+        updateNotepadStorage();
+      } else {
+        $.id("eNotepadTextArea").value = "Syncing...";
 
-    $.id('notebook').classList.remove('hidden')
-
-    setTimeout(() => {
-      $.id('notebook').classList.remove('invisible')
-    }, 10)
-
-    setTimeout(() => {
-      $.id('eNotepadTextArea').focus()
-      $.id('eNotepadTextArea').selectionEnd = 80
-      $.id('eNotepadTextArea').selectionStart = 80
-    }, 400)
-
-    clearInterval(tmp.eNotePadInterval)
-    tmp.eNotePadInterval = setInterval(() => {
-      if (globalState.eNotepadBattery > 0) globalState.eNotepadBattery -= 1
-      $.id('eNotepadBattery').innerHTML = `[${globalState.eNotepadBattery}%]`
-
-      if (globalState.eNotepadBattery === 0) {
-        $.id('eNotepadTextArea').blur()
-        $.id('eNotepadTextArea').value = 'Battery Depleted'
-        $.id('eNotepadTextArea').classList.add('disabled')
-        globalState.eNotepadContent = 'Battery Depleted'
+        setTimeout(() => {
+          $.id("eNotepadTextArea").value =
+            $phoneDevice.state.userData[
+              $phoneDevice.state.notepadUser
+            ].notePadValue;
+          $.id("eNotepadTextArea").focus();
+          updateNotepadStorage();
+        }, 500);
       }
-    }, 12000)
-  }
+    };
 
+    function unplugENotepad() {
+      globalState.eNotepadOpen = true;
 
+      $.id("eNotepadBattery").innerHTML = `[${globalState.eNotepadBattery}%]`;
 
-  setTimeout(() => {
-    $.id('mainConsoleContent').classList.add('smoothScroll')
-  }, 200)
+      $.id("notebook").classList.remove("hidden");
 
+      setTimeout(() => {
+        $.id("notebook").classList.remove("invisible");
+      }, 10);
 
-  const primaryStartingCtx = persist('__PRIMARY_SM_CTX', new CTX({
-    currentNode: 'start',
-    fallbackNode: 'bedroom',
-    currentActions: [],
-    state: {
-      // TODO: wifi shouldn't work if unplugged
-      router: {
-        pluggedIn: true
-      },
-      blindsOpenedBefore: false,
-      stairwayLevel: 0,
-      checkedThermostat: false,
-      checkedThermostatTwice: false,
-      roboVacLocation: 'kitchen',
-      roboVacLastActive: 0,
-      routerChecked: false,
-      wokenUp: false,
-      leftBed: false,
-      hallwayVisited: false,
+      setTimeout(() => {
+        $.id("eNotepadTextArea").focus();
+        $.id("eNotepadTextArea").selectionEnd = 80;
+        $.id("eNotepadTextArea").selectionStart = 80;
+      }, 400);
+
+      clearInterval(tmp.eNotePadInterval);
+      tmp.eNotePadInterval = setInterval(() => {
+        if (globalState.eNotepadBattery > 0) globalState.eNotepadBattery -= 1;
+        $.id("eNotepadBattery").innerHTML = `[${globalState.eNotepadBattery}%]`;
+
+        if (globalState.eNotepadBattery === 0) {
+          $.id("eNotepadTextArea").blur();
+          $.id("eNotepadTextArea").value = "Battery Depleted";
+          $.id("eNotepadTextArea").classList.add("disabled");
+          globalState.eNotepadContent = "Battery Depleted";
+        }
+      }, 12000);
     }
 
-  }))
+    setTimeout(() => {
+      $.id("mainConsoleContent").classList.add("smoothScroll");
+    }, 200);
 
+    const primaryStartingCtx = persist(
+      "__PRIMARY_SM_CTX",
+      new CTX({
+        currentNode: "start",
+        fallbackNode: "bedroom",
+        currentActions: [],
+        state: {
+          // TODO: wifi shouldn't work if unplugged
+          router: {
+            pluggedIn: true,
+          },
+          blindsOpenedBefore: false,
+          stairwayLevel: 0,
+          checkedThermostat: false,
+          checkedThermostatTwice: false,
+          roboVacLocation: "kitchen",
+          roboVacLastActive: 0,
+          routerChecked: false,
+          wokenUp: false,
+          leftBed: false,
+          hallwayVisited: false,
+        },
+      })
+    );
 
-  const logoSVG = (size, color) => `
+    const logoSVG = (size, color) => `
   <svg width="${size}em" height="${size}em" viewBox="0 0 1085 1116" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M35.29 1080H1065C1070.52 1080 1075 1075.52 1075 1070V373.784C1075 370.536 1073.42 367.49 1070.77 365.616L570.09 11.9293C566.734 9.55853 562.27 9.48198 558.834 11.7363L19.5137 365.643C16.6967 367.491 15 370.634 15 374.003V949.557C15 955.08 19.4772 959.557 25 959.557H951.868C957.391 959.557 961.868 955.08 961.868 949.557V434.196C961.868 430.896 960.24 427.809 957.517 425.944L570.025 160.686C566.696 158.407 562.324 158.351 558.938 160.545L149.295 425.967C146.451 427.81 144.733 430.969 144.733 434.359V831.846C144.733 837.369 149.21 841.846 154.733 841.846H834.432C839.954 841.846 844.432 837.369 844.432 831.846V487.882C844.432 484.471 842.693 481.296 839.82 479.458L569.805 306.759C566.577 304.695 562.454 304.656 559.189 306.659L277.394 479.481C274.429 481.299 272.622 484.527 272.622 488.005V718.615C272.622 724.138 277.099 728.615 282.622 728.615H718.84C724.363 728.615 728.84 724.138 728.84 718.615V536.64C728.84 533.184 727.055 529.973 724.12 528.148L569.627 432.093C566.489 430.142 562.531 430.081 559.333 431.933L393.2 528.193C390.114 529.981 388.213 533.278 388.213 536.846V620.489C388.213 626.011 392.691 630.489 398.213 630.489H564.528" stroke="${color}" stroke-width="20" stroke-linecap="round"/>
   <circle cx="37.5" cy="1078.5" r="37" fill="${color}" stroke="${color}"/>
   <circle cx="560.5" cy="628.5" r="37" fill="${color}" stroke="${color}"/>
   </svg>
-  `
+  `;
 
+    $.id("landingLogo").innerHTML = logoSVG(10, "var(--primary-color)");
 
-  $.id('landingLogo').innerHTML = logoSVG(10, 'var(--primary-color)')
+    const niceLocation = {
+      bed: "Bedroom",
+      bedroom: "Bedroom",
+      externalHallway: "???",
+      stairway: "???",
+      hallway: "Hallway",
+      livingRoom: "Living Room",
+      kitchen: "Kitchen",
+      bathroom: "Bathroom",
+      nothing: "",
+    };
 
+    const primaryConfig = {
+      defaultWait: 300,
+      clearQueue: true,
+      async onUpdate({ text, actions }, sm, nodeKey) {
+        sm.ctx.history.push(text);
+        // globalState.eventLog.push({timestamp: Date.now(), event: { type: 'mainConsole', payload: text}})
+        const $content = $.id("mainConsoleContent");
 
-  const niceLocation = {
-    bed: 'Bedroom',
-    bedroom: 'Bedroom',
-    externalHallway: '???',
-    stairway: '???',
-    hallway: 'Hallway',
-    livingRoom: 'Living Room',
-    kitchen: 'Kitchen',
-    bathroom: 'Bathroom',
-    nothing: ''
-  }
+        if (text) {
+          const p = $.p(text, { class: "preVisible" });
+          $content.insertBefore(p, $content.firstChild);
+          // setTimeout(() => p.classList.remove('preVisible'), 30)
+        }
 
-  const primaryConfig = {
-    defaultWait: 300,
-    clearQueue: true,
-    async onUpdate({ text, actions }, sm, nodeKey) {
-      sm.ctx.history.push(text)
-      // globalState.eventLog.push({timestamp: Date.now(), event: { type: 'mainConsole', payload: text}})
-      const $content = $.id('mainConsoleContent')
+        // $content.innerHTML += `<p>${text}</p>`
 
-      if (text) {
-        const p = $.p(text, {class: 'preVisible'})
-        $content.insertBefore(p, $content.firstChild)
-        // setTimeout(() => p.classList.remove('preVisible'), 30)
-      }
+        if (!["openPhone", "closePhone"].includes(sm.ctx.currentKey)) {
+          $content.scrollTop = 0;
+        }
 
-      // $content.innerHTML += `<p>${text}</p>`
+        $consoleLocation.innerHTML = niceLocation[globalState.location];
 
-      if (
-        !['openPhone', 'closePhone'].includes(sm.ctx.currentKey)
-      ) {
-        $content.scrollTop = 0
-      }
+        if (actions instanceof Function) {
+          actions = (await sm.evaluate(actions)).filter((a) => !!a);
+        }
 
-
-      $consoleLocation.innerHTML = niceLocation[globalState.location]
-
-      if (actions instanceof Function) {
-        actions = (await sm.evaluate(actions)).filter(a => !!a)
-      }
-
-      if (actions && !deepEquals(actions.map(a => a.value), sm.ctx.currentActions.map(a => a.value))) {
-        const inInternetLocation = globalState.location !== 'externalHallway' && globalState.location !== 'stairway'
-        const phoneNotifications = inInternetLocation ? $phoneDevice.phoneNotifications() : 0
-
-        $.id('nextActions').innerHTML = actions.map(a => `<button id="${a.value}" class="actionButton">${
-          a.text + (
-            a.text === 'Phone' && phoneNotifications
-              ? ` (${phoneNotifications})`
-              : ''
+        if (
+          actions &&
+          !deepEquals(
+            actions.map((a) => a.value),
+            sm.ctx.currentActions.map((a) => a.value)
           )
-        }</button>`).join('')
+        ) {
+          const inInternetLocation =
+            globalState.location !== "externalHallway" &&
+            globalState.location !== "stairway";
+          const phoneNotifications = inInternetLocation
+            ? $phoneDevice.phoneNotifications()
+            : 0;
 
-        actions.forEach(a => {
-          $.id(a.value).onclick = () => {
-            if (a.onClick) a.onClick()
-            globalState.lastAction = Date.now()
-            sm.next(a.value, true)
-          }
-        })
+          $.id("nextActions").innerHTML = actions
+            .map(
+              (a) =>
+                `<button id="${a.value}" class="actionButton">${
+                  a.text +
+                  (a.text === "Phone" && phoneNotifications
+                    ? ` (${phoneNotifications})`
+                    : "")
+                }</button>`
+            )
+            .join("");
 
-        sm.ctx.currentActions = actions
-        $phoneDevice.setState({ availableActions: actions.filter(a => a.text !== 'Phone')})
-      }
+          actions.forEach((a) => {
+            $.id(a.value).onclick = () => {
+              if (a.onClick) a.onClick();
+              globalState.lastAction = Date.now();
+              sm.next(a.value, true);
+            };
+          });
 
-      $phoneDevice.onNotification(() => {
-        const notifications = $phoneDevice.phoneNotifications()
-          ? ` (${$phoneDevice.phoneNotifications()})`
-          : ''
-        const phoneButton = $.id(`openPhone`)
-        if (phoneButton) phoneButton.innerHTML = `Phone${notifications}`
-      })
-
-      if (
-        globalState.wifiActive
-        && !globalState.thermostatDisabled
-        && !tmp.thermostatRinging
-        && nodeKey !== 'thermostatRing'
-      ) {
-        tmp.thermostatRinging = true
-        setTimeout(() => sm.enqueue('thermostatRing'), 1000)
-      }
-    },
-  }
-
-  const primaryNodes = {
-    start: {
-      handler: 'wakeUpInit',
-    },
-
-    wakeUpInit: {
-      text: '',
-      actions: [{ text: 'Wake Up', value: 'intro'}],
-      after({ctx}) {
-        globalState.wokenUp = true
-        ctx.state.wokenUp = true
-        $.id('sleepModal').classList.add('invisible')
-        $.id('intro').classList.add('invisible')
-        setTimeout(() => {
-          $.id('sleepModal').classList.add('hidden')
-        }, 550)
-      },
-      handler: ({ur}) => ur
-    },
-
-    backToSleep: {
-      before() {
-        $.id('phoneModal').classList.add('hidden')
-        $.id('sleepModal').classList.remove('hidden')
-        setTimeout(() => {
-          $.id('sleepModal').classList.remove('invisible')
-        }, 25)
-      },
-      text: 'You go back to sleep',
-      actions: [{ text: 'Wake Up', value: 'wakeUpAgain'}],
-    },
-
-    intro: [
-      { text: 'You wake up', wait: 2500, actions: [] },
-      { text: 'Anxiety lingers from a dream you no longer remember', wait: 2500},
-      // { text: 'A vague sense of dread lingers from a dream you no longer remember', wait: 1800},
-      {
-        before() {
-          globalState.location = 'bed'
-          $consoleLocation.innerHTML = niceLocation[globalState.location]
-        },
-        text: 'Your first conscious thought is to reach for your phone',
-        follow: 'bedFresh'
-      },
-      // { text: 'Your first conscious inclination is to reach for your phone', follow: 'bedFresh' },
-    ],
-
-    // BED
-    ...group({
-      bedFresh: [
-        { text: '', }, {text: '', }
-      ],
-
-      bed: {
-        before({ ctx }) {
-          globalState.location = 'bed'
-        },
-        text: 'You get into bed'
-      },
-
-      wakeUpAgain: {
-        before({ctx}) {
-          $.id('phoneModal').classList.remove('hidden')
-          $.id('sleepModal').classList.add('invisible')
-          $.id('wakeUpAgain').classList.add('invisible')
-          setTimeout(() => {
-            $.id('sleepModal').classList.add('hidden')
-          }, 550)
-        },
-        text: 'You wake up',
-
-      },
-
-      bedAlarm: {
-        text: 'You look at the alarm clock',
-        wait: 2200,
-        follow({ctx}) {
-          if (ctx.state.checkedAlarmClock) {
-            return 'bedAlarmApp'
-          } else {
-            return 'bedAlarmFresh'
-          }
-        },
-        after({ctx}) {
-          ctx.state.checkedAlarmClock = true
-        }
-      },
-
-
-      bedAlarmFresh: [
-        {
-          text: () => `It counts down from ${formatTime(globalState.countdownTimeLeft)}`,
-          before() {
-            setTimeout(() => {
-              if ($phoneDevice.state.dataPlanActivated && !globalState.sentFunTimeText) {
-                $phoneDevice.newText(funTimeText)
-                globalState.sentFunTimeText = true
-              }
-            }, globalState.countdownTimeLeft)
-          },
-          wait: 2200
-        },
-        { text: `You wonder what will happen when it hits 00:00:00`}
-      ],
-
-      bedAlarmApp: [
-        {
-          text: `There are no buttons`,
-          wait: 2200
-        },
-        {
-          text: `A sticker on its side says: "Time to download the official <em>Wake</em> app!"`
-        }
-      ],
-
-    }, {
-      actions: ({ctx}) => [
-        { text: 'Phone', value: 'openPhone'},
-        { text: 'Alarm Clock', value: 'bedAlarm', qr: { screen: 'appMarket', appMarketPreSearch: 'wake'}},
-        { text: 'Stand Up', value: 'standUpBed'},
-        ctx.state.leftBed ? { text: 'Sleep', value: 'backToSleep' } : null
-      ],
-      handler: ({ur}) => ur
-
-    }),
-
-    openPhone: {
-      before({ ctx, enqueue }) {
-        // ctx.stack.push(ctx.lastNode)
-
-        if (ctx.state.isOpen) {
-          $phoneModal.close()
-          return false
+          sm.ctx.currentActions = actions;
+          $phoneDevice.setState({
+            availableActions: actions.filter((a) => a.text !== "Phone"),
+          });
         }
 
-        ctx.state.isOpen = true
+        $phoneDevice.onNotification(() => {
+          const notifications = $phoneDevice.phoneNotifications()
+            ? ` (${$phoneDevice.phoneNotifications()})`
+            : "";
+          const phoneButton = $.id(`openPhone`);
+          if (phoneButton) phoneButton.innerHTML = `Phone${notifications}`;
+        });
 
-        $phoneModal.open()
-        if (!$phoneDevice.state.started) {
-          $phoneDevice.start()
-        }
-        $phoneModal.onClose(() => {
-          enqueue('closePhone')
-        })
-      },
-      text: 'You open your phone',
-      wait: 0,
-    },
-
-    closePhone: {
-      before({ctx}) {
-        ctx.state.isOpen = false
-      },
-      text: 'You close your phone',
-      // follow({ ctx, redirect }) {
-      //   redirect(ctx.stack.pop())
-      // },
-      // handler({ ctx, redirect }) {
-      //   if (ctx.stack.length) redirect(ctx.stack.pop())
-      //   else return ctx.fallbackNode
-      // }
-    },
-
-    hearSomethingVirus: {
-      text: 'You hear something in the hallway'
-    },
-
-    // BEDROOM
-    ...group({
-      standUpBed: {
-        before({ctx}) {
-          ctx.state.leftBed = true
-        },
-        text: 'You get out of bed',
-      },
-
-      bedroom: {
-        before({ ctx }) {
-          globalState.location = 'bedroom'
-        },
-        text: 'You enter the bedroom',
-        async follow({ctx}) {
-          if (ctx.state.roboVacLocation === 'bedroom') {
-            await waitPromise(1500)
-            return 'roboVacBedroom'
-          }
+        if (
+          globalState.wifiActive &&
+          !globalState.thermostatDisabled &&
+          !tmp.thermostatRinging &&
+          nodeKey !== "thermostatRing"
+        ) {
+          tmp.thermostatRinging = true;
+          setTimeout(() => sm.enqueue("thermostatRing"), 1000);
         }
       },
+    };
 
-      roboVacBedroom: {
-        text: `The RoboVac sits in the middle of the floor waiting for you`
-
-      },
-      roboVacLeavesBedroom: {
-        before({ctx}) {
-          ctx.state.roboVacLocation = sample(['livingRoom', 'kitchen', 'hallway', 'bathroom'])
-          globalState.roboVacCaught.bedroom = true
-        },
-        text: `The RoboVac exits the room as you walk towards it, leaving the floor spotless`
+    const primaryNodes = {
+      start: {
+        handler: "wakeUpInit",
       },
 
-      bedroomAlarm: {
-        text: 'You look at the alarm clock',
-        wait: 1800,
-        follow({ctx}) {
-          if (ctx.state.checkedAlarmClock) {
-            return 'bedroomAlarmApp'
-          } else {
-            return 'bedroomAlarmFresh'
-          }
-        },
-        after({ctx}) {
-          ctx.state.checkedAlarmClock = true
-        }
-      },
-
-
-      bedroomAlarmFresh: [
-        {
-          text: () => `It counts down from ${formatTime(globalState.countdownTimeLeft)}`,
-          wait: 1800
-        },
-        { text: `You wonder what will happen when it hits 00:00:00`}
-      ],
-
-      bedroomAlarmApp: [
-        {
-          text: `There are no buttons`,
-          wait: 2200
-        },
-        {
-          text: `A sticker on its side says: "Time to download the official <em>Wake</em> app!"`
-        }
-      ],
-
-      bedroomWindow: {
-        text: '',
-        wait: 0,
-        follow({ctx}) {
-          ctx.state.windowVisited = true
-          if (!ctx.state.blindsOpenedBefore && globalState.shaydOpen) {
-            ctx.state.blindsOpenedBefore = true
-            return 'bedroomWindowOpenNew'
-          } else if (globalState.shaydOpen) {
-            return 'bedroomWindowOpen'
-          } else {
-            return 'bedroomWindowClosed'
-          }
-        }
-      },
-      bedroomWindowClosed: {
-        text: 'Sunlight leaks through the closed blinds',
-        wait: 1800,
-        follow({ctx}) {
-          const next = ctx.state.checkedBlinds ? 'bedroomWindowClosedContinued' : 'bedroomWindowClosedNew'
-          ctx.state.checkedBlinds = true
-
-          return next
-        }
-      },
-
-      bedroomWindowClosedNew: {
-        text: 'It must be daytime'
-      },
-
-      bedroomWindowClosedContinued: {
-        text: `You don't see a way to manually open them, but you notice a QR code with instructions: "Scan this QR code to download the <em>Shayd</em> App!"`
-      },
-
-      bedroomWindowOpenNew: [
-        { text: `The blinds are now open`, wait: 1800 },
-        { text: `You stare through the window at the brick wall outside three feet away from the glass`, wait: 2500 },
-        { text: `Light creeps into the narrow alley from above, originating slightly outside your field of vision`, wait: 3000 },
-        { text: `The word "<strong>ClearBreeze</strong>" is laser-etched into the bottom right corner of the window. Next to it is a sticker: "For all issues regarding insulation and sound isolation, please submit a maintenance request using the <strong>Landlock Realty Rental App</strong>"`},
-      ],
-      bedroomWindowOpen: [
-        {
-          text: `You stare at the thin pane of glass seperating you from the outside world`,
-          wait: 2000
-        },
-        {
-          text: `The word "<strong>ClearBreeze</strong>" is laser-etched into the bottom right corner, along with a sticker: "For all issues regarding insulation and sound isolation, please submit a maintenance request using the <strong>Landlock Realty Rental App</strong>"`
-        },
-      ],
-      bedroomLamp: [
-        { text: `You inspect the lamp`, wait: 1800 },
-        { text: `There's no light switch`, wait: 1800 },
-        { text: `You see the word "<span style="font-family: cursive; font-size:1.1em">Lumin</span>" pasted to its side, next to a QR code`, wait: 1800 },
-      ]
-    }, {
-      actions: ({ctx}) => [
-        { text: 'Phone', value: 'openPhone'},
-        { text: 'Hallway', value: 'hallway'},
-        { text: 'Alarm Clock', value: 'bedroomAlarm', qr: { screen: 'appMarket', appMarketPreSearch: 'wake'}},
-        { text: 'Window', value: 'bedroomWindow', qr: { screen: 'appMarket', appMarketPreSearch: 'shayd'} },
-        { text: 'Bed', value: 'bed'},
-        ctx.state.roboVacLocation === 'bedroom'? { text: 'RoboVac', value: 'roboVacLeavesBedroom', qr: { screen: 'appMarket', appMarketPreSearch: 'robovac'}} : null,
-
-        // { text: 'Lamp', value: 'bedroomLamp', qr: { screen: 'messageViewer', messageViewerMessage: 'Illuminate your home with the Lumin app. Available only in AppMarket!'}},
-      ],
-      handler: ({ur}) => ur
-    }),
-
-    showerOff: {
-      text: 'You hear the shower turn off',
-      follow: async ({ctx}) => {
-        await waitPromise(1000)
-        if (ctx.state.roboVacLocation === 'hallway') {
-          return 'roboVacDoor'
-        } else if (!ctx.state.envelope1PickedUp || !ctx.state.envelope2PickedUp) {
-          return 'seePaper'
-        }
-      },
-    },
-
-    // HALLWAY
-    ...group({
-      hallway: {
-        before({ ctx }) {
-          globalState.location = 'hallway'
-        },
-        text: ({ctx}) => `You enter the hallway`,
-        follow: async ({ctx}) => {
-          await waitPromise(1500)
-          if (!ctx.state.hallwayVisited) {
-            return 'motionSensor'
-          } else if (ctx.state.roboVacLocation === 'hallway') {
-            return 'roboVacDoor'
-          } else if (!ctx.state.envelope1PickedUp || !ctx.state.envelope2PickedUp) {
-            return 'seePaper'
-          }
-        },
+      wakeUpInit: {
+        text: "",
+        actions: [{ text: "Wake Up", value: "intro" }],
         after({ ctx }) {
-          ctx.state.hallwayVisited = true
-        }
-      },
-
-      hallwayShower: {
-        before({ ctx }) {
-          globalState.location = 'hallway'
+          globalState.wokenUp = true;
+          ctx.state.wokenUp = true;
+          $.id("sleepModal").classList.add("invisible");
+          $.id("intro").classList.add("invisible");
+          setTimeout(() => {
+            $.id("sleepModal").classList.add("hidden");
+          }, 550);
         },
-        text: 'You enter the hallway',
-        follow: async () => {
-          await waitPromise(1000)
-          return 'showerOff'
-        }
+        handler: ({ ur }) => ur,
       },
 
-      seePaper: {
-        text: `You notice something at the foot of the front door`,
-      },
-
-      roboVacDoor: {
-        text: `The RoboVac repeatedly rams the front door, as if it's trying to escape`,
-        follow: async ({ctx}) => {
-          if (!ctx.state.envelope1PickedUp) {
-            await waitPromise(1500)
-            return 'seeAnotherPaper'
-          }
-        }
-      },
-
-
-      seeAnotherPaper: {
-        text: `You notice something else at the foot of the front door`,
-      },
-
-      roboVacHallway: {
-        before({ctx}) {
-          ctx.state.roboVacLocation = sample(['livingRoom', 'kitchen', 'bedroom', 'bathroom'])
-          globalState.roboVacCaught.hallway = true
-        },
-        text: `You approach the RoboVac, but it moves to a different room`
-
-      },
-
-      motionSensor: {
-        text: 'A motion sensor detects your presence and the camera above the front door comes to life',
-        wait: 1800,
-        follow: 'weirdHum'
-      },
-
-      weirdHum: {
+      backToSleep: {
         before() {
-          $gateLinkDevice.buzz(150, MAX_VOLUME*0.75)
+          $.id("phoneModal").classList.add("hidden");
+          $.id("sleepModal").classList.remove("hidden");
+          setTimeout(() => {
+            $.id("sleepModal").classList.remove("invisible");
+          }, 25);
         },
-        text: `You hear a noise, but can't place its location`
+        text: "You go back to sleep",
+        actions: [{ text: "Wake Up", value: "wakeUpAgain" }],
       },
 
-      hallwayCurrent: {
-        text: ''
-      },
+      intro: [
+        { text: "You wake up", wait: 2500, actions: [] },
+        {
+          text: "Anxiety lingers from a dream you no longer remember",
+          wait: 2500,
+        },
+        // { text: 'A vague sense of dread lingers from a dream you no longer remember', wait: 1800},
+        {
+          before() {
+            globalState.location = "bed";
+            $consoleLocation.innerHTML = niceLocation[globalState.location];
+          },
+          text: "Your first conscious thought is to reach for your phone",
+          follow: "bedFresh",
+        },
+        // { text: 'Your first conscious inclination is to reach for your phone', follow: 'bedFresh' },
+      ],
 
-      camera: {
-        text: `The small camera looks down at you`,
-        wait: 1800,
-        follow({ctx}) {
-          if (ctx.state.cameraSeen) return 'cameraSeen3'
-          else {
-            ctx.state.cameraSeen = true
-            return 'cameraSeen2'
-          }
+      // BED
+      ...group(
+        {
+          bedFresh: [{ text: "" }, { text: "" }],
+
+          bed: {
+            before({ ctx }) {
+              globalState.location = "bed";
+            },
+            text: "You get into bed",
+          },
+
+          wakeUpAgain: {
+            before({ ctx }) {
+              $.id("phoneModal").classList.remove("hidden");
+              $.id("sleepModal").classList.add("invisible");
+              $.id("wakeUpAgain").classList.add("invisible");
+              setTimeout(() => {
+                $.id("sleepModal").classList.add("hidden");
+              }, 550);
+            },
+            text: "You wake up",
+          },
+
+          bedAlarm: {
+            text: "You look at the alarm clock",
+            wait: 2200,
+            follow({ ctx }) {
+              if (ctx.state.checkedAlarmClock) {
+                return "bedAlarmApp";
+              } else {
+                return "bedAlarmFresh";
+              }
+            },
+            after({ ctx }) {
+              ctx.state.checkedAlarmClock = true;
+            },
+          },
+
+          bedAlarmFresh: [
+            {
+              text: () =>
+                `It counts down from ${formatTime(
+                  globalState.countdownTimeLeft
+                )}`,
+              before() {
+                setTimeout(() => {
+                  if (
+                    $phoneDevice.state.dataPlanActivated &&
+                    !globalState.sentFunTimeText
+                  ) {
+                    $phoneDevice.newText(funTimeText);
+                    globalState.sentFunTimeText = true;
+                  }
+                }, globalState.countdownTimeLeft);
+              },
+              wait: 2200,
+            },
+            { text: `You wonder what will happen when it hits 00:00:00` },
+          ],
+
+          bedAlarmApp: [
+            {
+              text: `There are no buttons`,
+              wait: 2200,
+            },
+            {
+              text: `A sticker on its side says: "Time to download the official <em>Wake</em> app!"`,
+            },
+          ],
+        },
+        {
+          actions: ({ ctx }) => [
+            { text: "Phone", value: "openPhone" },
+            {
+              text: "Alarm Clock",
+              value: "bedAlarm",
+              qr: { screen: "appMarket", appMarketPreSearch: "wake" },
+            },
+            { text: "Stand Up", value: "standUpBed" },
+            ctx.state.leftBed ? { text: "Sleep", value: "backToSleep" } : null,
+          ],
+          handler: ({ ur }) => ur,
         }
-      },
-      cameraSeen2: {
-        text: `You move, and it moves along with you`,
-        wait: 1800,
-        follow: 'cameraSeen3'
+      ),
+
+      openPhone: {
+        before({ ctx, enqueue }) {
+          // ctx.stack.push(ctx.lastNode)
+
+          if (ctx.state.isOpen) {
+            $phoneModal.close();
+            return false;
+          }
+
+          ctx.state.isOpen = true;
+
+          $phoneModal.open();
+          if (!$phoneDevice.state.started) {
+            $phoneDevice.start();
+          }
+          $phoneModal.onClose(() => {
+            enqueue("closePhone");
+          });
+        },
+        text: "You open your phone",
+        wait: 0,
       },
 
-      cameraSeen3: {
-        text: `You squint and make out a tiny message printed on it:
+      closePhone: {
+        before({ ctx }) {
+          ctx.state.isOpen = false;
+        },
+        text: "You close your phone",
+        // follow({ ctx, redirect }) {
+        //   redirect(ctx.stack.pop())
+        // },
+        // handler({ ctx, redirect }) {
+        //   if (ctx.stack.length) redirect(ctx.stack.pop())
+        //   else return ctx.fallbackNode
+        // }
+      },
+
+      hearSomethingVirus: {
+        text: "You hear something in the hallway",
+      },
+
+      // BEDROOM
+      ...group(
+        {
+          standUpBed: {
+            before({ ctx }) {
+              ctx.state.leftBed = true;
+            },
+            text: "You get out of bed",
+          },
+
+          bedroom: {
+            before({ ctx }) {
+              globalState.location = "bedroom";
+            },
+            text: "You enter the bedroom",
+            async follow({ ctx }) {
+              if (ctx.state.roboVacLocation === "bedroom") {
+                await waitPromise(1500);
+                return "roboVacBedroom";
+              }
+            },
+          },
+
+          roboVacBedroom: {
+            text: `The RoboVac sits in the middle of the floor waiting for you`,
+          },
+          roboVacLeavesBedroom: {
+            before({ ctx }) {
+              ctx.state.roboVacLocation = sample([
+                "livingRoom",
+                "kitchen",
+                "hallway",
+                "bathroom",
+              ]);
+              globalState.roboVacCaught.bedroom = true;
+            },
+            text: `The RoboVac exits the room as you walk towards it, leaving the floor spotless`,
+          },
+
+          bedroomAlarm: {
+            text: "You look at the alarm clock",
+            wait: 1800,
+            follow({ ctx }) {
+              if (ctx.state.checkedAlarmClock) {
+                return "bedroomAlarmApp";
+              } else {
+                return "bedroomAlarmFresh";
+              }
+            },
+            after({ ctx }) {
+              ctx.state.checkedAlarmClock = true;
+            },
+          },
+
+          bedroomAlarmFresh: [
+            {
+              text: () =>
+                `It counts down from ${formatTime(
+                  globalState.countdownTimeLeft
+                )}`,
+              wait: 1800,
+            },
+            { text: `You wonder what will happen when it hits 00:00:00` },
+          ],
+
+          bedroomAlarmApp: [
+            {
+              text: `There are no buttons`,
+              wait: 2200,
+            },
+            {
+              text: `A sticker on its side says: "Time to download the official <em>Wake</em> app!"`,
+            },
+          ],
+
+          bedroomWindow: {
+            text: "",
+            wait: 0,
+            follow({ ctx }) {
+              ctx.state.windowVisited = true;
+              if (!ctx.state.blindsOpenedBefore && globalState.shaydOpen) {
+                ctx.state.blindsOpenedBefore = true;
+                return "bedroomWindowOpenNew";
+              } else if (globalState.shaydOpen) {
+                return "bedroomWindowOpen";
+              } else {
+                return "bedroomWindowClosed";
+              }
+            },
+          },
+          bedroomWindowClosed: {
+            text: "Sunlight leaks through the closed blinds",
+            wait: 1800,
+            follow({ ctx }) {
+              const next = ctx.state.checkedBlinds
+                ? "bedroomWindowClosedContinued"
+                : "bedroomWindowClosedNew";
+              ctx.state.checkedBlinds = true;
+
+              return next;
+            },
+          },
+
+          bedroomWindowClosedNew: {
+            text: "It must be daytime",
+          },
+
+          bedroomWindowClosedContinued: {
+            text: `You don't see a way to manually open them, but you notice a QR code with instructions: "Scan this QR code to download the <em>Shayd</em> App!"`,
+          },
+
+          bedroomWindowOpenNew: [
+            { text: `The blinds are now open`, wait: 1800 },
+            {
+              text: `You stare through the window at the brick wall outside three feet away from the glass`,
+              wait: 2500,
+            },
+            {
+              text: `Light creeps into the narrow alley from above, originating slightly outside your field of vision`,
+              wait: 3000,
+            },
+            {
+              text: `The word "<strong>ClearBreeze</strong>" is laser-etched into the bottom right corner of the window. Next to it is a sticker: "For all issues regarding insulation and sound isolation, please submit a maintenance request using the <strong>Landlock Realty Rental App</strong>"`,
+            },
+          ],
+          bedroomWindowOpen: [
+            {
+              text: `You stare at the thin pane of glass seperating you from the outside world`,
+              wait: 2000,
+            },
+            {
+              text: `The word "<strong>ClearBreeze</strong>" is laser-etched into the bottom right corner, along with a sticker: "For all issues regarding insulation and sound isolation, please submit a maintenance request using the <strong>Landlock Realty Rental App</strong>"`,
+            },
+          ],
+          bedroomLamp: [
+            { text: `You inspect the lamp`, wait: 1800 },
+            { text: `There's no light switch`, wait: 1800 },
+            {
+              text: `You see the word "<span style="font-family: cursive; font-size:1.1em">Lumin</span>" pasted to its side, next to a QR code`,
+              wait: 1800,
+            },
+          ],
+        },
+        {
+          actions: ({ ctx }) => [
+            { text: "Phone", value: "openPhone" },
+            { text: "Hallway", value: "hallway" },
+            {
+              text: "Alarm Clock",
+              value: "bedroomAlarm",
+              qr: { screen: "appMarket", appMarketPreSearch: "wake" },
+            },
+            {
+              text: "Window",
+              value: "bedroomWindow",
+              qr: { screen: "appMarket", appMarketPreSearch: "shayd" },
+            },
+            { text: "Bed", value: "bed" },
+            ctx.state.roboVacLocation === "bedroom"
+              ? {
+                  text: "RoboVac",
+                  value: "roboVacLeavesBedroom",
+                  qr: { screen: "appMarket", appMarketPreSearch: "robovac" },
+                }
+              : null,
+
+            // { text: 'Lamp', value: 'bedroomLamp', qr: { screen: 'messageViewer', messageViewerMessage: 'Illuminate your home with the Lumin app. Available only in AppMarket!'}},
+          ],
+          handler: ({ ur }) => ur,
+        }
+      ),
+
+      showerOff: {
+        text: "You hear the shower turn off",
+        follow: async ({ ctx }) => {
+          await waitPromise(1000);
+          if (ctx.state.roboVacLocation === "hallway") {
+            return "roboVacDoor";
+          } else if (
+            !ctx.state.envelope1PickedUp ||
+            !ctx.state.envelope2PickedUp
+          ) {
+            return "seePaper";
+          }
+        },
+      },
+
+      // HALLWAY
+      ...group(
+        {
+          hallway: {
+            before({ ctx }) {
+              globalState.location = "hallway";
+            },
+            text: ({ ctx }) => `You enter the hallway`,
+            follow: async ({ ctx }) => {
+              await waitPromise(1500);
+              if (!ctx.state.hallwayVisited) {
+                return "motionSensor";
+              } else if (ctx.state.roboVacLocation === "hallway") {
+                return "roboVacDoor";
+              } else if (
+                !ctx.state.envelope1PickedUp ||
+                !ctx.state.envelope2PickedUp
+              ) {
+                return "seePaper";
+              }
+            },
+            after({ ctx }) {
+              ctx.state.hallwayVisited = true;
+            },
+          },
+
+          hallwayShower: {
+            before({ ctx }) {
+              globalState.location = "hallway";
+            },
+            text: "You enter the hallway",
+            follow: async () => {
+              await waitPromise(1000);
+              return "showerOff";
+            },
+          },
+
+          seePaper: {
+            text: `You notice something at the foot of the front door`,
+          },
+
+          roboVacDoor: {
+            text: `The RoboVac repeatedly rams the front door, as if it's trying to escape`,
+            follow: async ({ ctx }) => {
+              if (!ctx.state.envelope1PickedUp) {
+                await waitPromise(1500);
+                return "seeAnotherPaper";
+              }
+            },
+          },
+
+          seeAnotherPaper: {
+            text: `You notice something else at the foot of the front door`,
+          },
+
+          roboVacHallway: {
+            before({ ctx }) {
+              ctx.state.roboVacLocation = sample([
+                "livingRoom",
+                "kitchen",
+                "bedroom",
+                "bathroom",
+              ]);
+              globalState.roboVacCaught.hallway = true;
+            },
+            text: `You approach the RoboVac, but it moves to a different room`,
+          },
+
+          motionSensor: {
+            text: "A motion sensor detects your presence and the camera above the front door comes to life",
+            wait: 1800,
+            follow: "weirdHum",
+          },
+
+          weirdHum: {
+            before() {
+              $gateLinkDevice.buzz(150, MAX_VOLUME * 0.75);
+            },
+            text: `You hear a noise, but can't place its location`,
+          },
+
+          hallwayCurrent: {
+            text: "",
+          },
+
+          camera: {
+            text: `The small camera looks down at you`,
+            wait: 1800,
+            follow({ ctx }) {
+              if (ctx.state.cameraSeen) return "cameraSeen3";
+              else {
+                ctx.state.cameraSeen = true;
+                return "cameraSeen2";
+              }
+            },
+          },
+          cameraSeen2: {
+            text: `You move, and it moves along with you`,
+            wait: 1800,
+            follow: "cameraSeen3",
+          },
+
+          cameraSeen3: {
+            text: `You squint and make out a tiny message printed on it:
           <div style="border: 1px solid; padding: 1em; max-width: 250px; font-size: 0.5em; margin-top: 1em">
             SmartPro Security Camera: Keeping you safe since 2013. Download our App in the AppMarket!
           </div>
-        `
-      },
+        `,
+          },
 
-      thermostat: {
-        text: `You check the thermostat`,
-        wait: 1800,
-        follow({ctx}) {
-          const checkedThermostat = ctx.state.checkedThermostat
-          ctx.state.checkedThermostat = true
+          thermostat: {
+            text: `You check the thermostat`,
+            wait: 1800,
+            follow({ ctx }) {
+              const checkedThermostat = ctx.state.checkedThermostat;
+              ctx.state.checkedThermostat = true;
 
-          if (tmp.thermostatRinging) {
-            ctx.state.checkedThermostatTwice = true
-            return 'thermostatRinging'
+              if (tmp.thermostatRinging) {
+                ctx.state.checkedThermostatTwice = true;
+                return "thermostatRinging";
+              } else if (globalState.wifiActive) {
+                ctx.state.checkedThermostatTwice = true;
+                return `thermostatCo2Warning`;
+              } else if (checkedThermostat) {
+                return "thermostatQR";
+              } else {
+                return `thermostat99`;
+              }
+            },
+          },
 
-          } else if (globalState.wifiActive) {
-            ctx.state.checkedThermostatTwice = true
-            return `thermostatCo2Warning`
+          thermostatRinging: {
+            before() {
+              $consoleTemperature.innerHTML = " — 84˚ [CO2 LEVEL: HAZARDOUS]";
+            },
+            text: 'The display now says 84˚ and it reads: "WARNING: CO2 HAZARDOUS"',
+            wait: 1500,
+            follow: "thermostatQR",
+          },
 
-          } else if (checkedThermostat) {
-            return 'thermostatQR'
+          thermostatCo2Warning: {
+            before() {
+              $consoleTemperature.innerHTML = " — 84˚ [CO2 LEVEL: HAZARDOUS]";
+            },
+            text: "It says 84˚ and continues to display the CO2 warning",
+          },
 
-          } else {
-            return `thermostat99`
-          }
-        }
-      },
+          thermostatQR: {
+            text: `You notice a QR code you hadn't noticed before`,
+          },
 
-      thermostatRinging: {
-        before() {
-          $consoleTemperature.innerHTML = ' — 84˚ [CO2 LEVEL: HAZARDOUS]'
+          thermostat99: {
+            before() {
+              $consoleTemperature.innerHTML = " — 99˚";
+            },
+            text: `Every light is on, and it reads: 99˚`,
+            wait: 1800,
+            follow: "thermostatUncomfortable",
+          },
+
+          thermostatUncomfortable: {
+            text: `You don't think that's accurate, but for the first time you realize how uncomfortably warm you are`,
+          },
+
+          intercom: {
+            before() {
+              $gateLinkModal.open();
+            },
+            text: `You check the intercom`,
+          },
         },
-        text: 'The display now says 84˚ and it reads: "WARNING: CO2 HAZARDOUS"',
-        wait: 1500,
-        follow: 'thermostatQR'
-      },
-
-      thermostatCo2Warning: {
-        before() {
-          $consoleTemperature.innerHTML = ' — 84˚ [CO2 LEVEL: HAZARDOUS]'
-        },
-        text: 'It says 84˚ and continues to display the CO2 warning',
-      },
-
-      thermostatQR: {
-        text: `You notice a QR code you hadn't noticed before`
-      },
-
-      thermostat99: {
-        before() {
-          $consoleTemperature.innerHTML = ' — 99˚'
-        },
-        text: `Every light is on, and it reads: 99˚`,
-        wait: 1800,
-        follow: 'thermostatUncomfortable'
-      },
-
-      thermostatUncomfortable: {
-        text: `You don't think that's accurate, but for the first time you realize how uncomfortably warm you are`
-      },
-
-      intercom: {
-        before() {
-          $gateLinkModal.open()
-        },
-        text: `You check the intercom`,
-      },
-
-    }, {
-      actions: ({ctx}) =>  [
-        { text: 'Phone', value: 'openPhone'},
-        { text: 'Front Door', value: 'frontDoor',  qr: {screen: 'messageViewer', messageViewerMessage: 'Powered by SmartLock Technology<sup>TM</sup> Download the Official App today!'} },
-        { text: 'Living Room', value: 'livingRoom'},
-        { text: 'Bedroom', value: 'bedroom'},
-        { text: 'Bathroom', value: 'bathroom'},
-        { text: 'Camera', value: 'camera', qr: { screen: 'appMarket', appMarketPreSearch: 'SmartPro Security'}},
-        { text: 'Thermostat', value: 'thermostat', qr: { screen: 'appMarket', appMarketPreSearch: 'ThermoSmart'} },
-        { text: 'Intercom', value: 'intercom', qr: { screen: 'appMarket', appMarketPreSearch: 'GateLink'}},
-        ctx.state.roboVacLocation === 'hallway'? { text: 'RoboVac', value: 'roboVacHallway', qr: { screen: 'appMarket', appMarketPreSearch: 'robovac'}} : null,
-
-      ],
-      handler: ({ur}) => ur
-    }),
-
-    smartLockShift: {
-      text: 'You hear a motor turn, followed by a click',
-      after({ ctx, redirect }) {
-        ctx.state.doorEverUnlocked = true
-        redirect(ctx.lastNode)
-      },
-    },
-
-    thermostatRing: {
-      text: 'You hear a ringing coming from your thermostat',
-      follow({ ctx, redirect }) {
-        tmp.thermostatSrc = createSource('sine', 500)
-        tmp.thermostatRinging = true
-
-        tmp.thermostatRingInterval = setRunInterval(() => {
-          tmp.thermostatSrc.smoothGain(MAX_VOLUME/2)
-          setTimeout(() => {
-            tmp.thermostatSrc.smoothGain(0)
-          }, 150)
-        }, 500)
-        redirect(ctx.lastNode)
-      },
-
-    },
-
-    // Front DOOR
-    ...group({
-      frontDoor: [
         {
-          text: ({ctx}) => `The front door is closed`,
-          wait: 1800
-        },
-        globalState.smartLockOpen ? null : {
-          text: `Above the doorknob is a QR code along with the text "Powered by <strong style="text-decoration: underline">SmartLock</strong> Technology"`,
-          async follow({ctx}) {
-            if (!ctx.state.envelope1PickedUp && !ctx.state.envelope2PickedUp) {
-              await waitPromise(1500)
-              return 'envelopes'
-
-            } else if (
-              (ctx.state.envelope1PickedUp && !ctx.state.envelope2PickedUp) ||
-              (!ctx.state.envelope1PickedUp && ctx.state.envelope2PickedUp)
-            ) {
-              await waitPromise(1500)
-              return 'singleEnvelope'
-            }
-          }
+          actions: ({ ctx }) => [
+            { text: "Phone", value: "openPhone" },
+            {
+              text: "Front Door",
+              value: "frontDoor",
+              qr: {
+                screen: "messageViewer",
+                messageViewerMessage:
+                  "Powered by SmartLock Technology<sup>TM</sup> Download the Official App today!",
+              },
+            },
+            { text: "Living Room", value: "livingRoom" },
+            { text: "Bedroom", value: "bedroom" },
+            { text: "Bathroom", value: "bathroom" },
+            {
+              text: "Camera",
+              value: "camera",
+              qr: {
+                screen: "appMarket",
+                appMarketPreSearch: "SmartPro Security",
+              },
+            },
+            {
+              text: "Thermostat",
+              value: "thermostat",
+              qr: { screen: "appMarket", appMarketPreSearch: "ThermoSmart" },
+            },
+            {
+              text: "Intercom",
+              value: "intercom",
+              qr: { screen: "appMarket", appMarketPreSearch: "GateLink" },
+            },
+            ctx.state.roboVacLocation === "hallway"
+              ? {
+                  text: "RoboVac",
+                  value: "roboVacHallway",
+                  qr: { screen: "appMarket", appMarketPreSearch: "robovac" },
+                }
+              : null,
+          ],
+          handler: ({ ur }) => ur,
         }
-      ],
+      ),
 
-      envelopes: {
-        text: `Two envelopes rest at your feet`
-      },
-
-      singleEnvelope: {
-        text: `An envelope rests at your feet`
-      },
-
-      pickupEnvelope1: {
-        before({ctx}) {
-          ctx.state.envelope1PickedUp = true
+      smartLockShift: {
+        text: "You hear a motor turn, followed by a click",
+        after({ ctx, redirect }) {
+          ctx.state.doorEverUnlocked = true;
+          redirect(ctx.lastNode);
         },
-        text: `You pick up the first envelope
+      },
+
+      thermostatRing: {
+        text: "You hear a ringing coming from your thermostat",
+        follow({ ctx, redirect }) {
+          tmp.thermostatSrc = createSource("sine", 500);
+          tmp.thermostatRinging = true;
+
+          tmp.thermostatRingInterval = setRunInterval(() => {
+            tmp.thermostatSrc.smoothGain(MAX_VOLUME / 2);
+            setTimeout(() => {
+              tmp.thermostatSrc.smoothGain(0);
+            }, 150);
+          }, 500);
+          redirect(ctx.lastNode);
+        },
+      },
+
+      // Front DOOR
+      ...group(
+        {
+          frontDoor: [
+            {
+              text: ({ ctx }) => `The front door is closed`,
+              wait: 1800,
+            },
+            globalState.smartLockOpen
+              ? null
+              : {
+                  text: `Above the doorknob is a QR code along with the text "Powered by <strong style="text-decoration: underline">SmartLock</strong> Technology"`,
+                  async follow({ ctx }) {
+                    if (
+                      !ctx.state.envelope1PickedUp &&
+                      !ctx.state.envelope2PickedUp
+                    ) {
+                      await waitPromise(1500);
+                      return "envelopes";
+                    } else if (
+                      (ctx.state.envelope1PickedUp &&
+                        !ctx.state.envelope2PickedUp) ||
+                      (!ctx.state.envelope1PickedUp &&
+                        ctx.state.envelope2PickedUp)
+                    ) {
+                      await waitPromise(1500);
+                      return "singleEnvelope";
+                    }
+                  },
+                },
+          ],
+
+          envelopes: {
+            text: `Two envelopes rest at your feet`,
+          },
+
+          singleEnvelope: {
+            text: `An envelope rests at your feet`,
+          },
+
+          pickupEnvelope1: {
+            before({ ctx }) {
+              ctx.state.envelope1PickedUp = true;
+            },
+            text: `You pick up the first envelope
           <div>
             <div style="border: 1px solid; padding: 0.5em; display: inline-block; margin: 0.5em; background: #fff">
               <p class="letterText">Dear NEIGHBOR,</p>
@@ -956,14 +1113,14 @@
             </div>
           </div>
         </div>
-        `
-      },
+        `,
+          },
 
-      pickupEnvelope2: {
-        before({ctx}) {
-          ctx.state.envelope2PickedUp = true
-        },
-        text: `You pick up the second envelope
+          pickupEnvelope2: {
+            before({ ctx }) {
+              ctx.state.envelope2PickedUp = true;
+            },
+            text: `You pick up the second envelope
           <div>
           <div style="border: 1px solid; padding: 0.5em; display: inline-block; margin: 0.5em; background: #fff">
             <p class="letterText" style="font-size: 0.75em; margin: 0">#948921</p>
@@ -974,330 +1131,426 @@
             <p class="letterText">This bill can be paid via</p>
           </div>
         </div>
-        `
-      },
+        `,
+          },
 
-      openDoorLocked: {
-        before({ enqueue }) {
-          if (globalState.smartLockOpen) {
-            enqueue('openDoorUnlocked')
-            return false
-          }
-        },
-        text: `You try turning the doorknob, but it's locked`,
-        follow({ctx}) {
-          if (!ctx.state.doorEverUnlocked) return 'maybeLockAppCanHelp'
-        },
-        wait: 1500
-      },
-
-      maybeLockAppCanHelp: {
-        text: `Maybe the SmartLock app can help`
-      },
-
-      closeDoor: {
-        before() {
-          if (globalState.lightsOn) {
-            setColors('#fff', '#000')
-          } else {
-            setColors('var(--dark-color)', 'var(--light-color)')
-          }
-
-          if (tmp.src1 && tmp.src2) {
-            tmp.src1.smoothGain(0.000001, 1)
-            tmp.src2.smoothGain(0.000001, 1)
-
-            setTimeout(() => {
-              tmp.src1.stop()
-              tmp.src2.stop()
-            }, 3000)
-          }
-        },
-        text: `You close the door`
-      },
-
-      reenterApartment: {
-        before({ ctx }) {
-          globalState.location = 'hallway'
-
-          if (ctx.state.checkedThermostat) {
-            $consoleTemperature.innerHTML = ctx.state.checkedThermostatTwice ? ' — 84˚ [CO2 LEVEL: HAZARDOUS]' : ' — 99˚'
-          } else {
-            $consoleTemperature.innerHTML = ''
-          }
-
-          if (primaryStartingCtx.state.checkedAlarmClock) {
-            $consoleTime.innerHTML = ` — ${formatTime(globalState.countdownTimeLeft)}`
-          } else {
-            $consoleTime.innerHTML = ``
-          }
-
-          if (globalState.lightsOn) {
-            const { light1, light2 } = globalState
-            setColors(hsvToRGB(light1), hsvToRGB(light2))
-          } else {
-            setColors('var(--dark-color)', 'var(--light-color)')
-          }
-
-          if (tmp.src1 && tmp.src2) {
-            tmp.src1.smoothGain(0.000001, 1)
-            tmp.src2.smoothGain(0.000001, 1)
-
-            setTimeout(() => {
-              tmp.src1.stop()
-              tmp.src2.stop()
-            }, 3000)
-          }
-        },
-        text: `You reenter your apartment and close the door`
-      },
-
-      frontDoorListen: [
-        {
-          before() {
-            try {
-              if (!tmp.src1?.isStopped) {
-                tmp.src1 = createSource('sine', 100)
-                tmp.src2 = createSource('sine', 100.1)
-
-                tmp.src1.smoothGain(MAX_VOLUME, 1.5)
-                tmp.src2.smoothGain(MAX_VOLUME, 1.5)
+          openDoorLocked: {
+            before({ enqueue }) {
+              if (globalState.smartLockOpen) {
+                enqueue("openDoorUnlocked");
+                return false;
               }
-            } catch (e) {
-              console.log(e)
+            },
+            text: `You try turning the doorknob, but it's locked`,
+            follow({ ctx }) {
+              if (!ctx.state.doorEverUnlocked) return "maybeLockAppCanHelp";
+            },
+            wait: 1500,
+          },
+
+          maybeLockAppCanHelp: {
+            text: `Maybe the SmartLock app can help`,
+          },
+
+          closeDoor: {
+            before() {
+              if (globalState.lightsOn) {
+                setColors("#fff", "#000");
+              } else {
+                setColors("var(--dark-color)", "var(--light-color)");
+              }
+
+              if (tmp.src1 && tmp.src2) {
+                tmp.src1.smoothGain(0.000001, 1);
+                tmp.src2.smoothGain(0.000001, 1);
+
+                setTimeout(() => {
+                  tmp.src1.stop();
+                  tmp.src2.stop();
+                }, 3000);
+              }
+            },
+            text: `You close the door`,
+          },
+
+          reenterApartment: {
+            before({ ctx }) {
+              globalState.location = "hallway";
+
+              if (ctx.state.checkedThermostat) {
+                $consoleTemperature.innerHTML = ctx.state.checkedThermostatTwice
+                  ? " — 84˚ [CO2 LEVEL: HAZARDOUS]"
+                  : " — 99˚";
+              } else {
+                $consoleTemperature.innerHTML = "";
+              }
+
+              if (primaryStartingCtx.state.checkedAlarmClock) {
+                $consoleTime.innerHTML = ` — ${formatTime(
+                  globalState.countdownTimeLeft
+                )}`;
+              } else {
+                $consoleTime.innerHTML = ``;
+              }
+
+              if (globalState.lightsOn) {
+                const { light1, light2 } = globalState;
+                setColors(hsvToRGB(light1), hsvToRGB(light2));
+              } else {
+                setColors("var(--dark-color)", "var(--light-color)");
+              }
+
+              if (tmp.src1 && tmp.src2) {
+                tmp.src1.smoothGain(0.000001, 1);
+                tmp.src2.smoothGain(0.000001, 1);
+
+                setTimeout(() => {
+                  tmp.src1.stop();
+                  tmp.src2.stop();
+                }, 3000);
+              }
+            },
+            text: `You reenter your apartment and close the door`,
+          },
+
+          frontDoorListen: [
+            {
+              before() {
+                try {
+                  if (!tmp.src1?.isStopped) {
+                    tmp.src1 = createSource("sine", 100);
+                    tmp.src2 = createSource("sine", 100.1);
+
+                    tmp.src1.smoothGain(MAX_VOLUME, 1.5);
+                    tmp.src2.smoothGain(MAX_VOLUME, 1.5);
+                  }
+                } catch (e) {
+                  console.log(e);
+                }
+              },
+              text: `You put your ear to the door`,
+              wait: 1800,
+            },
+            {
+              text: `All you hear is a low hum`,
+            },
+          ],
+        },
+        {
+          handler: ({ ur }) => ur,
+          actions: ({ ctx }) =>
+            [
+              { text: "Back", value: "hallwayCurrent" },
+              {
+                text: "Open Door",
+                value: globalState.smartLockOpen
+                  ? "openDoorUnlocked"
+                  : "openDoorLocked",
+                qr: {
+                  screen: "messageViewer",
+                  messageViewerMessage:
+                    "Powered by SmartLock Technology<sup>TM</sup> Download the Official App today!",
+                },
+              },
+              {
+                text: "Listen Closely",
+                value: "frontDoorListen",
+                qr: {
+                  screen: "messageViewer",
+                  messageViewerMessage:
+                    "Powered by SmartLock Technology<sup>TM</sup> Download the Official App today!",
+                },
+              },
+              ctx.state.envelope1PickedUp
+                ? null
+                : { text: "Pick Up First Envelope", value: "pickupEnvelope1" },
+              ctx.state.envelope2PickedUp
+                ? null
+                : { text: "Pick Up Second Envelope", value: "pickupEnvelope2" },
+            ].filter(exists),
+          after({ ur }) {
+            if (
+              tmp.src1 &&
+              tmp.src2 &&
+              !["openDoorUnlocked", "frontDoorListen"].includes(ur)
+            ) {
+              tmp.src1.smoothGain(0.000001, 1);
+              tmp.src2.smoothGain(0.000001, 1);
+              setTimeout(() => {
+                tmp.src1.stop();
+                tmp.src2.stop();
+              }, 3000);
             }
           },
-          text: `You put your ear to the door`,
-          wait: 1800
-        },
-        {
-          text: `All you hear is a low hum`,
         }
-      ]
+      ),
 
-    }, {
-      handler: ({ur}) => ur,
-      actions: ({ctx}) => [
-        {text: 'Back', value: 'hallwayCurrent'},
-        {text: 'Open Door', value: globalState.smartLockOpen ? 'openDoorUnlocked' : 'openDoorLocked', qr: {screen: 'messageViewer', messageViewerMessage: 'Powered by SmartLock Technology<sup>TM</sup> Download the Official App today!'}},
-        {text: 'Listen Closely', value: 'frontDoorListen', qr: {screen: 'messageViewer', messageViewerMessage: 'Powered by SmartLock Technology<sup>TM</sup> Download the Official App today!'}},
-        ctx.state.envelope1PickedUp ? null : {text: 'Pick Up First Envelope', value: 'pickupEnvelope1'},
-        ctx.state.envelope2PickedUp ? null : {text: 'Pick Up Second Envelope', value: 'pickupEnvelope2'},
-      ].filter(exists),
-      after({ur}) {
-        if (tmp.src1 && tmp.src2 && !['openDoorUnlocked', 'frontDoorListen'].includes(ur)) {
-          tmp.src1.smoothGain(0.000001, 1)
-          tmp.src2.smoothGain(0.000001, 1)
-          setTimeout(() => {
-            tmp.src1.stop()
-            tmp.src2.stop()
-          }, 3000)
-        }
-      }
-    }),
-
-    hearSomething: {
-      before() {
-        $gateLinkDevice.buzz(250)
-      },
-      text: 'You hear a something in the hallway'
-    },
-
-    // LIVING ROOM
-    ...group({
-      livingRoom: {
+      hearSomething: {
         before() {
-          globalState.location = 'livingRoom'
+          $gateLinkDevice.buzz(250);
         },
-        text: `You enter the living room`,
-        async follow({ ctx }) {
-          await waitPromise(1000)
-
-          if (!ctx.state.livingRoomVisited) {
-            ctx.state.livingRoomVisited = true
-            return 'wonderPlants'
-          } else if (globalState.location === 'kitchen' && !ctx.state.envelope1PickedUp) {
-            return 'hearSomething'
-          } else if (ctx.state.roboVacLocation === 'livingRoom') {
-            return 'roboVacRouter'
-          }
-        },
+        text: "You hear a something in the hallway",
       },
 
-      roboVacRouter: {
-        text: `The RoboVac moves through a seemingly pre-planned set of motions, circling around the router`
-      },
-
-      roboVacLivingRoom: {
-        before({ctx}) {
-          globalState.roboVacCaught.livingRoom = true
-
-          if (!ctx.state.envelope1PickedUp) {
-            ctx.state.roboVacLocation = 'hallway'
-          } else {
-            ctx.state.roboVacLocation = sample(['hallway', 'kitchen', 'bedroom', 'bathroom'])
-          }
-        },
-        text: ({ctx}) => !ctx.state.envelope1PickedUp
-          ? `You walk towards the RoboVac, but it moves towards the hallway before you get to it`
-          : `You walk towards the RoboVac, but it leaves the room`
-      },
-
-      wonderPlants: {
-        text: 'You wonder how your plants are doing'
-      },
-
-
-      livingRoomCurrent: {
-        text: ''
-      },
-
-      planter: [
-        {text: 'You check your plants', wait: 1800},
+      // LIVING ROOM
+      ...group(
         {
-          text: () => {
-            if (globalState.plantsDead) {
-              return `They're dead`
+          livingRoom: {
+            before() {
+              globalState.location = "livingRoom";
+            },
+            text: `You enter the living room`,
+            async follow({ ctx }) {
+              await waitPromise(1000);
 
-            } else if (globalState.shaydOpen && globalState.plantWatered) {
-              return `They're thriving!`
-
-            } else if (globalState.shaydOpen && !globalState.plantWatered) {
-              return `The leaves sag from a lack of water`
-
-            } else if (!globalState.shaydOpen && globalState.plantWatered) {
-              return `The leaves sag from a lack of sunlight`
-
-            } else if (!globalState.shaydOpen && !globalState.plantWatered) {
-              return `The leaves sag from a lack of water and sunlight`
-            }
+              if (!ctx.state.livingRoomVisited) {
+                ctx.state.livingRoomVisited = true;
+                return "wonderPlants";
+              } else if (
+                globalState.location === "kitchen" &&
+                !ctx.state.envelope1PickedUp
+              ) {
+                return "hearSomething";
+              } else if (ctx.state.roboVacLocation === "livingRoom") {
+                return "roboVacRouter";
+              }
+            },
           },
-          wait: 1800
+
+          roboVacRouter: {
+            text: `The RoboVac moves through a seemingly pre-planned set of motions, circling around the router`,
+          },
+
+          roboVacLivingRoom: {
+            before({ ctx }) {
+              globalState.roboVacCaught.livingRoom = true;
+
+              if (!ctx.state.envelope1PickedUp) {
+                ctx.state.roboVacLocation = "hallway";
+              } else {
+                ctx.state.roboVacLocation = sample([
+                  "hallway",
+                  "kitchen",
+                  "bedroom",
+                  "bathroom",
+                ]);
+              }
+            },
+            text: ({ ctx }) =>
+              !ctx.state.envelope1PickedUp
+                ? `You walk towards the RoboVac, but it moves towards the hallway before you get to it`
+                : `You walk towards the RoboVac, but it leaves the room`,
+          },
+
+          wonderPlants: {
+            text: "You wonder how your plants are doing",
+          },
+
+          livingRoomCurrent: {
+            text: "",
+          },
+
+          planter: [
+            { text: "You check your plants", wait: 1800 },
+            {
+              text: () => {
+                if (globalState.plantsDead) {
+                  return `They're dead`;
+                } else if (globalState.shaydOpen && globalState.plantWatered) {
+                  return `They're thriving!`;
+                } else if (globalState.shaydOpen && !globalState.plantWatered) {
+                  return `The leaves sag from a lack of water`;
+                } else if (!globalState.shaydOpen && globalState.plantWatered) {
+                  return `The leaves sag from a lack of sunlight`;
+                } else if (
+                  !globalState.shaydOpen &&
+                  !globalState.plantWatered
+                ) {
+                  return `The leaves sag from a lack of water and sunlight`;
+                }
+              },
+              wait: 1800,
+            },
+            {
+              text: () =>
+                globalState.plantWatered
+                  ? ""
+                  : `On the side of the pot you read: "SmartPlanter<sup>TM</sup> - The most advanced planter technology on the market today! Download our app in the AppMarket!"`,
+            },
+          ],
+
+          eNotepad: {
+            text: () =>
+              globalState.eNotepadOpen
+                ? "You plug in the eNotepad"
+                : "You pick up the eNotepad",
+            follow({ ctx }) {
+              if (globalState.eNotepadOpen) {
+                pluginENotepad();
+              } else {
+                unplugENotepad();
+              }
+            },
+          },
+          livingroomWindow: {
+            text: "",
+            wait: 0,
+            follow({ ctx }) {
+              if (!ctx.state.blindsOpenedBefore && globalState.shaydOpen) {
+                ctx.state.blindsOpenedBefore = true;
+                return "livingroomWindowOpenNew";
+              } else if (globalState.shaydOpen) {
+                return "livingroomWindowOpen";
+              } else {
+                return "livingroomWindowClosed";
+              }
+            },
+          },
+
+          livingroomWindowClosed: {
+            text: "Sunlight leaks through the closed blinds",
+            wait: 1800,
+            follow({ ctx }) {
+              const next = ctx.state.checkedBlinds
+                ? "livingroomWindowClosedContinued"
+                : "livingroomWindowClosedNew";
+              ctx.state.checkedBlinds = true;
+
+              return next;
+            },
+          },
+
+          livingroomWindowClosedNew: {
+            text: "It must be daytime",
+          },
+
+          livingroomWindowClosedContinued: {
+            text: `You don't see a way to manually open them, but you notice a QR code with instructions: "Scan this QR code to download the <em>Shayd</em> App!"`,
+          },
+
+          livingroomWindowOpenNew: [
+            { text: `The blinds are now open`, wait: 1750 },
+            {
+              text: `You stare through the window at the brick wall outside three feet away from the glass`,
+              wait: 2750,
+            },
+            {
+              text: `Light creeps into the narrow alley from above, originating slightly outside your field of vision`,
+              wait: 3500,
+            },
+            {
+              text: `The word "<strong>ClearBreeze</strong>" is laser-etched into the bottom right corner of the window. Next to it is a sticker: "For all issues regarding insulation and sound isolation, please submit a maintenance request using the <strong>Landlock Realty Rental App</strong>"`,
+            },
+          ],
+          livingroomWindowOpen: [
+            {
+              text: `You stare at the thin pane of glass seperating you from the outside world`,
+              wait: 2000,
+            },
+            {
+              text: `The word "<strong>ClearBreeze</strong>" is laser-etched into the bottom right corner, along with a sticker: "For all issues regarding insulation and sound isolation, please submit a maintenance request using the <strong>Landlock Realty Rental App</strong>"`,
+            },
+          ],
+
+          smartFrame: {
+            before() {
+              $smartFrameDevice.refresh();
+              $smartFrameModal.open();
+            },
+            text: `You look at the smart frame`,
+          },
+
+          livingroomLamp: [
+            { text: `You inspect the lamp`, wait: 1800 },
+            {
+              text: `You see the word "<span style="font-family: cursive; font-size:1.1em">Lumin</span>" pasted to its side, next to a QR code`,
+              wait: 1800,
+            },
+          ],
         },
         {
-          text: () => globalState.plantWatered ? '' : `On the side of the pot you read: "SmartPlanter<sup>TM</sup> - The most advanced planter technology on the market today! Download our app in the AppMarket!"`
+          actions: ({ ctx }) => [
+            { text: "Phone", value: "openPhone" },
+            { text: "Hallway", value: "hallway" },
+            { text: "Kitchen", value: "kitchen" },
+            {
+              text: "SmartPlanter<sup>TM</sup>",
+              value: "planter",
+              qr: {
+                screen: "messageViewer",
+                messageViewerMessage: `Your plants will thank you once you download the official SmartPlanter<sup>TM</sup> app!`,
+              },
+            },
+            { text: "Router", value: "router" },
+
+            {
+              text: "Window",
+              value: "livingroomWindow",
+              qr: { screen: "appMarket", appMarketPreSearch: "shayd" },
+            },
+            {
+              text: "TV",
+              value: "tv",
+              qr: { screen: "appMarket", appMarketPreSearch: "smarttv" },
+            },
+            {
+              text: "Lamp",
+              value: "livingroomLamp",
+              qr: {
+                screen: "messageViewer",
+                messageViewerMessage:
+                  "Illuminate your home with the Lumin app. Available only in AppMarket!",
+              },
+            },
+            {
+              text: "SmartFrame",
+              value: "smartFrame",
+              qr: { screen: "appMarket", appMarketPreSearch: "smartframe" },
+            },
+            { text: "eNotepad", value: "eNotepad" },
+            ctx.state.roboVacLocation === "livingRoom"
+              ? {
+                  text: "RoboVac",
+                  value: "roboVacLivingRoom",
+                  qr: { screen: "appMarket", appMarketPreSearch: "robovac" },
+                }
+              : null,
+          ],
+          handler: ({ ur }) => ur,
         }
-      ],
+      ),
 
-
-      eNotepad: {
-        text: () => globalState.eNotepadOpen ? 'You plug in the eNotepad' : 'You pick up the eNotepad',
-        follow({ctx}) {
-          if (globalState.eNotepadOpen) {
-            pluginENotepad()
-          } else {
-            unplugENotepad()
-          }
-        }
-      },
-      livingroomWindow: {
-        text: '',
-        wait: 0,
-        follow({ctx}) {
-          if (!ctx.state.blindsOpenedBefore && globalState.shaydOpen) {
-            ctx.state.blindsOpenedBefore = true
-            return 'livingroomWindowOpenNew'
-          } else if (globalState.shaydOpen) {
-            return 'livingroomWindowOpen'
-          } else {
-            return 'livingroomWindowClosed'
-          }
-        }
-      },
-
-      livingroomWindowClosed: {
-        text: 'Sunlight leaks through the closed blinds',
-        wait: 1800,
-        follow({ctx}) {
-          const next = ctx.state.checkedBlinds ? 'livingroomWindowClosedContinued' : 'livingroomWindowClosedNew'
-          ctx.state.checkedBlinds = true
-
-          return next
-        }
-      },
-
-      livingroomWindowClosedNew: {
-        text: 'It must be daytime'
-      },
-
-      livingroomWindowClosedContinued: {
-        text: `You don't see a way to manually open them, but you notice a QR code with instructions: "Scan this QR code to download the <em>Shayd</em> App!"`
-      },
-
-      livingroomWindowOpenNew: [
-        { text: `The blinds are now open`, wait: 1750 },
-        { text: `You stare through the window at the brick wall outside three feet away from the glass`, wait: 2750 },
-        { text: `Light creeps into the narrow alley from above, originating slightly outside your field of vision`, wait: 3500 },
-        { text: `The word "<strong>ClearBreeze</strong>" is laser-etched into the bottom right corner of the window. Next to it is a sticker: "For all issues regarding insulation and sound isolation, please submit a maintenance request using the <strong>Landlock Realty Rental App</strong>"`},
-      ],
-      livingroomWindowOpen: [
+      // ROUTER
+      ...group(
         {
-          text: `You stare at the thin pane of glass seperating you from the outside world`,
-          wait: 2000
-        },
-        {
-          text: `The word "<strong>ClearBreeze</strong>" is laser-etched into the bottom right corner, along with a sticker: "For all issues regarding insulation and sound isolation, please submit a maintenance request using the <strong>Landlock Realty Rental App</strong>"`
-        },
-      ],
-
-      smartFrame: {
-        before() {
-          $smartFrameDevice.refresh()
-          $smartFrameModal.open()
-        },
-        text: `You look at the smart frame`,
-      },
-
-      livingroomLamp: [
-        { text: `You inspect the lamp`, wait: 1800 },
-        { text: `You see the word "<span style="font-family: cursive; font-size:1.1em">Lumin</span>" pasted to its side, next to a QR code`, wait: 1800 },
-      ]
-    }, {
-      actions: ({ctx}) => [
-        { text: 'Phone', value: 'openPhone'},
-        { text: 'Hallway', value: 'hallway'},
-        { text: 'Kitchen', value: 'kitchen'},
-        { text: 'SmartPlanter<sup>TM</sup>', value: 'planter', qr: {screen: 'messageViewer', messageViewerMessage: `Your plants will thank you once you download the official SmartPlanter<sup>TM</sup> app!` } },
-        { text: 'Router', value: 'router'},
-
-        { text: 'Window', value: 'livingroomWindow', qr: { screen: 'appMarket', appMarketPreSearch: 'shayd'} },
-        { text: 'TV', value: 'tv', qr: { screen: 'appMarket', appMarketPreSearch: 'smarttv'} },
-        { text: 'Lamp', value: 'livingroomLamp', qr: { screen: 'messageViewer', messageViewerMessage: 'Illuminate your home with the Lumin app. Available only in AppMarket!'}},
-        { text: 'SmartFrame', value: 'smartFrame', qr: { screen: 'appMarket', appMarketPreSearch: 'smartframe'} },
-        { text: 'eNotepad', value: 'eNotepad'},
-        ctx.state.roboVacLocation === 'livingRoom'? { text: 'RoboVac', value: 'roboVacLivingRoom', qr: { screen: 'appMarket', appMarketPreSearch: 'robovac'}} : null,
-      ],
-      handler: ({ur}) => ur
-
-    }),
-
-    // ROUTER
-    ...group({
-      router: {
-        before({ctx}) {
-          ctx.state.routerChecked = true
-        },
-        text: ({ctx}) => ctx.state.router.pluggedIn
-          ? `You inspect the router, which has a reset button and three lights:
+          router: {
+            before({ ctx }) {
+              ctx.state.routerChecked = true;
+            },
+            text: ({ ctx }) =>
+              ctx.state.router.pluggedIn
+                ? `You inspect the router, which has a reset button and three lights:
           <div>Power (on)</div>
-          <div>Internet (${globalState.wifiActive ? 'on' : 'off'})</div>
-          <div>WiFi (${globalState.routerReset || globalState.wifiActive ? 'on' : 'off'})</div>
+          <div>Internet (${globalState.wifiActive ? "on" : "off"})</div>
+          <div>WiFi (${
+            globalState.routerReset || globalState.wifiActive ? "on" : "off"
+          })</div>
           `
-          : `You inspect the router. The Power, Internet, and WiFi lights are all off`
-      },
+                : `You inspect the router. The Power, Internet, and WiFi lights are all off`,
+          },
 
-      resetRouter: [
-        {
-          text: `You push the router's reset button`,
-          wait: 1500
-        },
-        {
-          text: `Nothing happens`
-        }
-      ],
+          resetRouter: [
+            {
+              text: `You push the router's reset button`,
+              wait: 1500,
+            },
+            {
+              text: `Nothing happens`,
+            },
+          ],
 
-      bottomRouter: {
-        text: `You pick up the router and look at the bottom:
+          bottomRouter: {
+            text: `You pick up the router and look at the bottom:
         <div>
           <div style="border: 1px solid; padding: 1em; display: inline-block; margin: 0.5em; border-radius: 8px">
             <h3>WiFi Network Name: InpatientRehabilitationServices</h3>
@@ -1309,841 +1562,984 @@
             <h6 style="text-align: center; margin-top: 0.5em"><em>Download the official NBS Customer Success App in the App Market!</em></h6>
           </div>
         </div>
-        `
-      }
-    }, {
-      actions: ({ctx}) => [
-        { text: 'Back', value: 'livingRoomCurrent'},
-        { text: 'Push Reset Button', value: 'resetRouter'},
-        { text: 'Look At Bottom of Router', value: 'bottomRouter'},
-        { text: 'Check Power', value: 'checkWifiPower'},
-      ],
-      handler: ({ur}) => ur
-    }),
-
-    // TV
-    ...group({
-      tv: {
-        text: 'The black screen of the TV looms ominously over you'
-      },
-
-      turnOnTV: {
-        before({ ctx, enqueue }) {
-          // if (ctx.state.tvOn) {
-          //   console.log('dsfadfa')
-          //   $tvModal.close()
-          //   ctx.state.isOpen = false
-          //   return false
-          // }
-
-          ctx.state.tvOn = true
-
-          $tvModal.open()
-          $tvModal.onClose(() => {
-            enqueue('turnOffTV')
-          })
-        },
-        text: 'You turn the TV on',
-      },
-
-      turnOffTV: {
-        before({ctx}) {
-          ctx.state.tvOn = false
-        },
-        text: 'You turn the TV off',
-      }
-    }, {
-      actions: ({ ctx }) => [
-        { text: 'Back', value: 'livingRoomCurrent'},
-        ctx.state.tvOn ? { text: 'Turn Off', value: 'turnOffTV'} : { text: 'Turn On', value: 'turnOnTV'},
-      ],
-      handler: ({ur}) => ur
-    }),
-
-    // ROUTER BOTTOM
-    ...group({
-      checkWifiPower: [
-        {
-          text: `You follow the router's power cord to a socket in the wall`,
-          wait: 1500
-        },
-        {
-          text: ({ctx}) => `It is ${ctx.state.router.pluggedIn ? 'plugged in' : 'unplugged'}`
-        }
-      ],
-      unplugRouter: [
-        {
-          text: `You unplug the router`,
-          after({ctx}) {
-            ctx.state.router.pluggedIn = false
-            globalState.routerUnplugged = true
-            Object.values(globalState.cryptoDevices).forEach(device => {
-              device.active = false
-              clearInterval(device.interval)
-            })
+        `,
           },
-          wait: 1200
         },
         {
-          text: 'The Power, Internet, and WiFi lights immediately turn off'
+          actions: ({ ctx }) => [
+            { text: "Back", value: "livingRoomCurrent" },
+            { text: "Push Reset Button", value: "resetRouter" },
+            { text: "Look At Bottom of Router", value: "bottomRouter" },
+            { text: "Check Power", value: "checkWifiPower" },
+          ],
+          handler: ({ ur }) => ur,
         }
-      ],
+      ),
 
-      plugInRouter: [
+      // TV
+      ...group(
         {
-          text: ({ctx}) => `You plug the router back in`,
-          after({ctx}) {
-            ctx.state.router.pluggedIn = true
-            globalState.routerUnplugged = false
-            setTimeout(() => globalState.routerReset = true, 4000)
+          tv: {
+            text: "The black screen of the TV looms ominously over you",
           },
-          wait: 1500,
+
+          turnOnTV: {
+            before({ ctx, enqueue }) {
+              // if (ctx.state.tvOn) {
+              //   console.log('dsfadfa')
+              //   $tvModal.close()
+              //   ctx.state.isOpen = false
+              //   return false
+              // }
+
+              ctx.state.tvOn = true;
+
+              $tvModal.open();
+              $tvModal.onClose(() => {
+                enqueue("turnOffTV");
+              });
+            },
+            text: "You turn the TV on",
+          },
+
+          turnOffTV: {
+            before({ ctx }) {
+              ctx.state.tvOn = false;
+            },
+            text: "You turn the TV off",
+          },
         },
         {
-          text: `The Power, Internet, and WiFi lights all turn on for one second, turn back off for one second, and blink for three seconds${globalState.routerReset ? ' before returning to their original states' : ''}`,
-          follow: async () => {
-            if (!globalState.routerReset) {
-              await waitPromise(1500)
-              return 'wifiNowOn'
-            }
-          }
+          actions: ({ ctx }) => [
+            { text: "Back", value: "livingRoomCurrent" },
+            ctx.state.tvOn
+              ? { text: "Turn Off", value: "turnOffTV" }
+              : { text: "Turn On", value: "turnOnTV" },
+          ],
+          handler: ({ ur }) => ur,
         }
-      ],
+      ),
 
-      wifiNowOn: {
-        text: 'The WiFi light is now on'
-      }
+      // ROUTER BOTTOM
+      ...group(
+        {
+          checkWifiPower: [
+            {
+              text: `You follow the router's power cord to a socket in the wall`,
+              wait: 1500,
+            },
+            {
+              text: ({ ctx }) =>
+                `It is ${
+                  ctx.state.router.pluggedIn ? "plugged in" : "unplugged"
+                }`,
+            },
+          ],
+          unplugRouter: [
+            {
+              text: `You unplug the router`,
+              after({ ctx }) {
+                ctx.state.router.pluggedIn = false;
+                globalState.routerUnplugged = true;
+                Object.values(globalState.cryptoDevices).forEach((device) => {
+                  device.active = false;
+                  clearInterval(device.interval);
+                });
+              },
+              wait: 1200,
+            },
+            {
+              text: "The Power, Internet, and WiFi lights immediately turn off",
+            },
+          ],
 
-    }, {
-      handler: ({ur}) => ur,
-      actions({ctx}) {
-        return [
-          { text: 'Back', value: 'router'},
-          ctx.state.router.pluggedIn
-            ? { text: 'Unplug Router', value: 'unplugRouter', onClick: () => ctx.state.router.pluggedIn = false}
-            : { text: 'Plug In Router', value: 'plugInRouter', onClick: () => ctx.state.router.pluggedIn = true},
-        ]
-      }
-    }),
+          plugInRouter: [
+            {
+              text: ({ ctx }) => `You plug the router back in`,
+              after({ ctx }) {
+                ctx.state.router.pluggedIn = true;
+                globalState.routerUnplugged = false;
+                setTimeout(() => (globalState.routerReset = true), 4000);
+              },
+              wait: 1500,
+            },
+            {
+              text: `The Power, Internet, and WiFi lights all turn on for one second, turn back off for one second, and blink for three seconds${
+                globalState.routerReset
+                  ? " before returning to their original states"
+                  : ""
+              }`,
+              follow: async () => {
+                if (!globalState.routerReset) {
+                  await waitPromise(1500);
+                  return "wifiNowOn";
+                }
+              },
+            },
+          ],
 
-
-    // BATHROOM
-    ...group({
-      bathroom: {
-        before({ ctx }) {
-          globalState.location = 'bathroom'
+          wifiNowOn: {
+            text: "The WiFi light is now on",
+          },
         },
-        text: ({ctx}) => `You enter the bathroom`,
-        follow: 'showerOn',
-        wait: 1000
-      },
-
-      showerOn: {
-        text: 'The shower turns on',
-        async follow({ctx}) {
-          if (ctx.state.urine) {
-            await waitPromise(1500)
-            return globalState.autoFlusherActive  ? 'flush' : 'urine'
-          } else {
-            if (ctx.state.roboVacLocation === 'bathroom') {
-              await waitPromise(1500)
-              return 'roboVacSpinning'
-            }
-          }
-        },
-      },
-
-      flush: {
-        before({ctx}) {
-          ctx.state.urine = false
-        },
-        text: 'The toilet detects your presence and promptly flushes',
-        async follow({ctx}) {
-          if (ctx.state.roboVacLocation === 'bathroom') {
-            await waitPromise(1500)
-            return 'roboVacSpinning'
-          }
+        {
+          handler: ({ ur }) => ur,
+          actions({ ctx }) {
+            return [
+              { text: "Back", value: "router" },
+              ctx.state.router.pluggedIn
+                ? {
+                    text: "Unplug Router",
+                    value: "unplugRouter",
+                    onClick: () => (ctx.state.router.pluggedIn = false),
+                  }
+                : {
+                    text: "Plug In Router",
+                    value: "plugInRouter",
+                    onClick: () => (ctx.state.router.pluggedIn = true),
+                  },
+            ];
+          },
         }
-      },
+      ),
 
-      urine: {
-        text: 'The smell of stale urine fills your nostrils',
-        async follow({ctx}) {
-          if (ctx.state.roboVacLocation === 'bathroom') {
-            await waitPromise(1500)
-            return 'roboVacSpinning'
-          }
+      // BATHROOM
+      ...group(
+        {
+          bathroom: {
+            before({ ctx }) {
+              globalState.location = "bathroom";
+            },
+            text: ({ ctx }) => `You enter the bathroom`,
+            follow: "showerOn",
+            wait: 1000,
+          },
+
+          showerOn: {
+            text: "The shower turns on",
+            async follow({ ctx }) {
+              if (ctx.state.urine) {
+                await waitPromise(1500);
+                return globalState.autoFlusherActive ? "flush" : "urine";
+              } else {
+                if (ctx.state.roboVacLocation === "bathroom") {
+                  await waitPromise(1500);
+                  return "roboVacSpinning";
+                }
+              }
+            },
+          },
+
+          flush: {
+            before({ ctx }) {
+              ctx.state.urine = false;
+            },
+            text: "The toilet detects your presence and promptly flushes",
+            async follow({ ctx }) {
+              if (ctx.state.roboVacLocation === "bathroom") {
+                await waitPromise(1500);
+                return "roboVacSpinning";
+              }
+            },
+          },
+
+          urine: {
+            text: "The smell of stale urine fills your nostrils",
+            async follow({ ctx }) {
+              if (ctx.state.roboVacLocation === "bathroom") {
+                await waitPromise(1500);
+                return "roboVacSpinning";
+              }
+            },
+          },
+
+          roboVacSpinning: {
+            text: `The RoboVac works through an endless counterclockwise rotation`,
+          },
+
+          bathroomCurrent: {
+            text: "",
+          },
+
+          toilet: {
+            text({ ctx }) {
+              if (!globalState.autoFlusherActive && !ctx.state.urine) {
+                return `You use the toilet, but the auto-flusher does not activate`;
+              } else if (!globalState.autoFlusherActive && ctx.state.urine) {
+                return `You wave your hand in front of the toilet, but the auto-flusher does not activate`;
+              } else if (globalState.autoFlusherActive && ctx.state.urine) {
+                return `You wave your hand in front of the toilet, and it flushes without missing a beat`;
+              } else {
+                return `You use the toilet, and it seamlessly flushes the second you're done!`;
+              }
+            },
+            wait: 1800,
+            follow({ ctx }) {
+              if (!globalState.autoFlusherActive) {
+                ctx.state.urine = true;
+                return "toiletQR";
+              }
+            },
+          },
+
+          toiletQR: {
+            text: 'On the side of the tank you see a QR code with instructions: "Scan this QR code with the QR Scanner app!"',
+          },
+          bathroomSink: [
+            {
+              text: () =>
+                globalState.wifiActive
+                  ? "You wave your hands in front of the sink"
+                  : "You wave your hands in front of the sink, but nothing happens",
+              wait: 1600,
+            },
+            {
+              text: () =>
+                globalState.wifiActive
+                  ? "A refreshing gush of water comes out of the faucet"
+                  : "A small red light blinks at its base",
+            },
+          ],
+
+          shower: [
+            {
+              text: () =>
+                `${
+                  globalState.showerHeatOn ? "Scalding hot" : "Frigid"
+                } water shoots out of the showerhead`,
+              wait: 1600,
+            },
+            {
+              text: "Condensation forms around a QR code on its side",
+            },
+          ],
+
+          roboVacBathroom: {
+            before({ ctx }) {
+              ctx.state.roboVacLocation = sample([
+                "kitchen",
+                "livingRoom",
+                "bedroom",
+                "hallway",
+              ]);
+              globalState.roboVacCaught.bathroom = true;
+            },
+            text: "Sensing your presence, the RoboVac moves to a different room",
+          },
+        },
+        {
+          actions: ({ ctx }) => [
+            { text: "Phone", value: "openPhone" },
+            { text: "Hallway", value: "hallwayShower" },
+            {
+              text: "Toilet",
+              value: "toilet",
+              qr: {
+                screen: "messageViewer",
+                messageViewerMessage:
+                  "Advanced Auto-Flusher technology powered by FlushMate",
+              },
+            },
+            { text: "Sink", value: "bathroomSink" },
+            {
+              text: "Shower",
+              value: "shower",
+              qr: {
+                screen: "messageViewer",
+                messageViewerMessage: "Bathe in luxury",
+              },
+            },
+            ctx.state.roboVacLocation === "bathroom"
+              ? {
+                  text: "RoboVac",
+                  value: "roboVacBathroom",
+                  qr: { screen: "appMarket", appMarketPreSearch: "robovac" },
+                }
+              : null,
+          ],
+          handler: ({ ur }) => ur,
         }
-      },
+      ),
 
-      roboVacSpinning: {
-        text: `The RoboVac works through an endless counterclockwise rotation`
-      },
-
-      bathroomCurrent: {
-        text: ''
-      },
-
-      toilet: {
-        text({ctx}) {
-          if (!globalState.autoFlusherActive && !ctx.state.urine) {
-            return `You use the toilet, but the auto-flusher does not activate`
-          } else if (!globalState.autoFlusherActive && ctx.state.urine) {
-            return `You wave your hand in front of the toilet, but the auto-flusher does not activate`
-          } else if (globalState.autoFlusherActive && ctx.state.urine) {
-            return `You wave your hand in front of the toilet, and it flushes without missing a beat`
-          } else {
-            return `You use the toilet, and it seamlessly flushes the second you're done!`
-          }
-        },
-        wait: 1800,
-        follow({ctx}) {
-          if (!globalState.autoFlusherActive) {
-            ctx.state.urine = true
-            return 'toiletQR'
-          }
-        }
-      },
-
-      toiletQR: {
-        text: 'On the side of the tank you see a QR code with instructions: "Scan this QR code with the QR Scanner app!"'
-      },
-      bathroomSink: [
+      // KITCHEN
+      ...group(
         {
-          text: () => globalState.wifiActive ? 'You wave your hands in front of the sink' : 'You wave your hands in front of the sink, but nothing happens',
-          wait: 1600
+          kitchen: {
+            before({ ctx }) {
+              globalState.location = "kitchen";
+            },
+            text: ({ ctx }) => `You enter the kitchen`,
+            after({ ctx }) {
+              ctx.state.kitchenVisited = true;
+            },
+            async follow({ ctx }) {
+              if (
+                ctx.state.roboVacLocation === "kitchen" &&
+                ctx.state.roboVacLastActive > 0
+              ) {
+                await waitPromise(1500);
+                return "roboVacDocked";
+              }
+            },
+          },
 
-        },
-        {
-          text: () => globalState.wifiActive ? 'A refreshing gush of water comes out of the faucet' : 'A small red light blinks at its base'
-        }
-      ],
+          kitchenCurrent: {
+            text: "",
+          },
 
-      shower: [
-        {
-          text: () => `${globalState.showerHeatOn ? 'Scalding hot' : 'Frigid'} water shoots out of the showerhead`,
-          wait: 1600
-        },
-        {
-          text: 'Condensation forms around a QR code on its side'
-        }
-      ],
+          refrigeratorLocked: [
+            {
+              text: `You try the door to the refrigerator but it won't open`,
+              wait: 1500,
+            },
+            {
+              text: `A small LED screen on its front: <span style="display: inline-block; padding: 0.25em; border: 1px solid; background: #000; color: #fff">LOCKED // LOCAL NETWORK INVALID</span>`,
+            },
+          ],
 
-      roboVacBathroom: {
-        before({ctx}) {
-          ctx.state.roboVacLocation = sample(['kitchen', 'livingRoom', 'bedroom', 'hallway'])
-          globalState.roboVacCaught.bathroom = true
+          refrigeratorOpen: [
+            {
+              text: `You open the refrigerator`,
+              wait: 1500,
+            },
+            {
+              text: `The air is only slightly cooler than room temperature`,
+              wait: 1500,
+            },
+            {
+              text: `You see an empty paper bag with a receipt that says "FoodFetch"`,
+            },
+          ],
+          kitchenSink: [
+            {
+              text: () =>
+                globalState.wifiActive
+                  ? "You wave your hands in front of the sink"
+                  : "You wave your hands in front of the sink but nothing happens",
+              wait: 1600,
+            },
+            {
+              text: () =>
+                globalState.wifiActive
+                  ? "A refreshing gush of water comes out of the faucet"
+                  : "A small red light blinks at its base",
+            },
+          ],
 
-        },
-        text: 'Sensing your presence, the RoboVac moves to a different room',
-      }
-    }, {
-      actions: ({ctx}) => [
-        { text: 'Phone', value: 'openPhone'},
-        { text: 'Hallway', value: 'hallwayShower'},
-        { text: 'Toilet', value: 'toilet', qr: {screen: 'messageViewer', messageViewerMessage: 'Advanced Auto-Flusher technology powered by FlushMate'}},
-        { text: 'Sink', value: 'bathroomSink'},
-        { text: 'Shower', value: 'shower', qr: {screen: 'messageViewer', messageViewerMessage: 'Bathe in luxury'}},
-        ctx.state.roboVacLocation === 'bathroom'? { text: 'RoboVac', value: 'roboVacBathroom', qr: { screen: 'appMarket', appMarketPreSearch: 'robovac'}} : null,
-
-      ],
-      handler: ({ur}) => ur
-    }),
-
-
-    // KITCHEN
-    ...group({
-      kitchen: {
-        before({ ctx }) {
-          globalState.location = 'kitchen'
-        },
-        text: ({ctx}) => `You enter the kitchen`,
-        after({ ctx }) {
-          ctx.state.kitchenVisited = true
-        },
-        async follow({ctx}) {
-          if (ctx.state.roboVacLocation === 'kitchen' && ctx.state.roboVacLastActive > 0) {
-            await waitPromise(1500)
-            return 'roboVacDocked'
-          }
-        }
-      },
-
-      kitchenCurrent: {
-        text: ''
-      },
-
-      refrigeratorLocked: [
-        {
-          text: `You try the door to the refrigerator but it won't open`,
-          wait: 1500,
-        },
-        {
-          text: `A small LED screen on its front: <span style="display: inline-block; padding: 0.25em; border: 1px solid; background: #000; color: #fff">LOCKED // LOCAL NETWORK INVALID</span>`
-        }
-      ],
-
-      refrigeratorOpen: [
-        {
-          text: `You open the refrigerator`,
-          wait: 1500,
-        },
-        {
-          text: `The air is only slightly cooler than room temperature`,
-          wait: 1500,
-        },
-        {
-          text: `You see an empty paper bag with a receipt that says "FoodFetch"`
-        },
-      ],
-      kitchenSink: [
-        {
-          text: () => globalState.wifiActive ? 'You wave your hands in front of the sink' : 'You wave your hands in front of the sink but nothing happens',
-          wait: 1600
-
-        },
-        {
-          text: () => globalState.wifiActive ? 'A refreshing gush of water comes out of the faucet' : 'A small red light blinks at its base'
-        }
-      ],
-
-      toaster: [
-        {
-          text: `You're not quite sure how the toaster works but you see a QR code on one side`,
-          wait: 1800
-        },
-        {
-          text: () => `On the other side is an LED screen:
+          toaster: [
+            {
+              text: `You're not quite sure how the toaster works but you see a QR code on one side`,
+              wait: 1800,
+            },
+            {
+              text: () => `On the other side is an LED screen:
             <div style="margin-top: 0.5em">
               <div style="display: inline-block;border: 1px dashed; padding: 0.5em; background: #79ffec; text-align: center; color: #4b0d5d">
                 <h3 style="color: #4b0d5d">User: ToastBaby69</h3>
-                <h3 style="color: #4b0d5d">Last toast: ${globalState.wifiActive ?  '52' : 'NaN'} days ago</h3>
-                <h3 style="color: #4b0d5d">Total toasts: ${globalState.wifiActive ?  '11' : 'ERROR: Cannot connect to server.'}</h3>
+                <h3 style="color: #4b0d5d">Last toast: ${
+                  globalState.wifiActive ? "52" : "NaN"
+                } days ago</h3>
+                <h3 style="color: #4b0d5d">Total toasts: ${
+                  globalState.wifiActive
+                    ? "11"
+                    : "ERROR: Cannot connect to server."
+                }</h3>
               </div>
             </div>
-          `
-        }
-      ],
-      kitchenWindow: {
-        text: '',
-        wait: 0,
-        follow({ctx}) {
-          if (!ctx.state.blindsOpenedBefore && globalState.shaydOpen) {
-            ctx.state.blindsOpenedBefore = true
-            return 'kitchenWindowOpenNew'
-          } else if (globalState.shaydOpen) {
-            return 'kitchenWindowOpen'
-          } else {
-            return 'kitchenWindowClosed'
-          }
-        }
-      },
-      kitchenWindowClosed: {
-        text: 'Sunlight leaks through the closed blinds',
-        wait: 1800,
-        follow({ctx}) {
-          const next = ctx.state.checkedBlinds ? 'kitchenWindowClosedContinued' : 'kitchenWindowClosedNew'
-          ctx.state.checkedBlinds = true
-
-          return next
-        }
-      },
-
-      kitchenWindowClosedNew: {
-        text: 'It must be daytime'
-      },
-
-      kitchenWindowClosedContinued: {
-        text: `You don't see a way to open them, but you notice a QR code accompanied with instructions: "Scan this QR code to download the <em>Shayd</em> App!"`
-      },
-
-
-      kitchenWindowOpenNew: [
-        { text: `The blinds are now open`, wait: 1800 },
-        { text: `You stare through the window at the brick wall outside three feet away from the glass`, wait: 2500 },
-        { text: `Light creeps into the narrow alley from above, originating slightly outside your field of vision`, wait: 3000 },
-        { text: `The word "<strong>ClearBreeze</strong>" is laser-etched into the bottom right corner of the window. Next to it is a sticker: "For all issues regarding insulation and sound isolation, please submit a maintenance request using the <strong>Landlock Realty Rental App</strong>"`},
-      ],
-      kitchenWindowOpen: [
-        {
-          text: `You stare at the thin pane of glass seperating you from the outside world`,
-          wait: 2000
-        },
-        {
-          text: `The word "<strong>ClearBreeze</strong>" is laser-etched into the bottom right corner, along with a sticker: "For all issues regarding insulation and sound isolation, please submit a maintenance request using the <strong>Landlock Realty Rental App</strong>"`
-        },
-      ],
-
-      roboVacDocked: {
-        text: `The RoboVac charges in its doc`
-      },
-
-      roboVacActivate: [
-        {
-          before({ctx}) {
-            ctx.state.roboVacLastActive = Date.now()
-
-
-            const ring = async () => {
-              const src = new SoundSrc()
-              await src.note(659.25, 150)
-              await src.note(622.25, 150)
-              await src.note(659.25, 150)
-              await src.note(622.25, 150)
-              await src.note(659.25, 150)
-              await src.note(493.88, 150)
-              await src.note(587.33, 150)
-              await src.note(523.25, 150)
-              await src.note(440, 300)
-              await src.note(659.25, 300)
-              await src.note(880, 300)
-              setTimeout(() => {
-                src.stop()
-              }, 1000)
-            }
-
-            ring()
-
-            //e, eb, e, eb, e, b, d, c, a (e, a+)
-
-            globalState.roboVacCaught.kitchen = true
-
-
-            if (!ctx.state.routerChecked) {
-              ctx.state.roboVacLocation = 'livingRoom'
-            } else if (ctx.state.envelope1PickedUp) {
-              ctx.state.roboVacLocation = 'hallway'
-            } else {
-              ctx.state.roboVacLocation = sample(['hallway', 'livingRoom', 'bedroom', 'bathroom'])
-            }
-
+          `,
+            },
+          ],
+          kitchenWindow: {
+            text: "",
+            wait: 0,
+            follow({ ctx }) {
+              if (!ctx.state.blindsOpenedBefore && globalState.shaydOpen) {
+                ctx.state.blindsOpenedBefore = true;
+                return "kitchenWindowOpenNew";
+              } else if (globalState.shaydOpen) {
+                return "kitchenWindowOpen";
+              } else {
+                return "kitchenWindowClosed";
+              }
+            },
           },
-          text: `The RoboVac comes to life`,
-          wait: 2000
+          kitchenWindowClosed: {
+            text: "Sunlight leaks through the closed blinds",
+            wait: 1800,
+            follow({ ctx }) {
+              const next = ctx.state.checkedBlinds
+                ? "kitchenWindowClosedContinued"
+                : "kitchenWindowClosedNew";
+              ctx.state.checkedBlinds = true;
+
+              return next;
+            },
+          },
+
+          kitchenWindowClosedNew: {
+            text: "It must be daytime",
+          },
+
+          kitchenWindowClosedContinued: {
+            text: `You don't see a way to open them, but you notice a QR code accompanied with instructions: "Scan this QR code to download the <em>Shayd</em> App!"`,
+          },
+
+          kitchenWindowOpenNew: [
+            { text: `The blinds are now open`, wait: 1800 },
+            {
+              text: `You stare through the window at the brick wall outside three feet away from the glass`,
+              wait: 2500,
+            },
+            {
+              text: `Light creeps into the narrow alley from above, originating slightly outside your field of vision`,
+              wait: 3000,
+            },
+            {
+              text: `The word "<strong>ClearBreeze</strong>" is laser-etched into the bottom right corner of the window. Next to it is a sticker: "For all issues regarding insulation and sound isolation, please submit a maintenance request using the <strong>Landlock Realty Rental App</strong>"`,
+            },
+          ],
+          kitchenWindowOpen: [
+            {
+              text: `You stare at the thin pane of glass seperating you from the outside world`,
+              wait: 2000,
+            },
+            {
+              text: `The word "<strong>ClearBreeze</strong>" is laser-etched into the bottom right corner, along with a sticker: "For all issues regarding insulation and sound isolation, please submit a maintenance request using the <strong>Landlock Realty Rental App</strong>"`,
+            },
+          ],
+
+          roboVacDocked: {
+            text: `The RoboVac charges in its doc`,
+          },
+
+          roboVacActivate: [
+            {
+              before({ ctx }) {
+                ctx.state.roboVacLastActive = Date.now();
+
+                const ring = async () => {
+                  const src = new SoundSrc();
+                  await src.note(659.25, 150);
+                  await src.note(622.25, 150);
+                  await src.note(659.25, 150);
+                  await src.note(622.25, 150);
+                  await src.note(659.25, 150);
+                  await src.note(493.88, 150);
+                  await src.note(587.33, 150);
+                  await src.note(523.25, 150);
+                  await src.note(440, 300);
+                  await src.note(659.25, 300);
+                  await src.note(880, 300);
+                  setTimeout(() => {
+                    src.stop();
+                  }, 1000);
+                };
+
+                ring();
+
+                //e, eb, e, eb, e, b, d, c, a (e, a+)
+
+                globalState.roboVacCaught.kitchen = true;
+
+                if (!ctx.state.routerChecked) {
+                  ctx.state.roboVacLocation = "livingRoom";
+                } else if (ctx.state.envelope1PickedUp) {
+                  ctx.state.roboVacLocation = "hallway";
+                } else {
+                  ctx.state.roboVacLocation = sample([
+                    "hallway",
+                    "livingRoom",
+                    "bedroom",
+                    "bathroom",
+                  ]);
+                }
+              },
+              text: `The RoboVac comes to life`,
+              wait: 2000,
+            },
+            {
+              text: ({ ctx }) =>
+                `It slowly rolls into the ${
+                  !ctx.state.routerChecked ? "living" : "other"
+                } room`,
+            },
+          ],
         },
         {
-          text: ({ctx}) => `It slowly rolls into the ${!ctx.state.routerChecked ? 'living' : 'other'} room`
+          actions: ({ ctx }) => [
+            { text: "Phone", value: "openPhone" },
+            { text: "Living Room", value: "livingRoom" },
+            {
+              text: "Refrigerator",
+              value: globalState.wifiActive
+                ? "refrigeratorOpen"
+                : "refrigeratorLocked",
+              qr: { screen: "appMarket", appMarketPreSearch: "freeze" },
+            },
+            { text: "Kitchen Sink", value: "kitchenSink" },
+            // { text: 'Oven', value: 'oven'},
+            {
+              text: "Toaster",
+              value: "toaster",
+              qr: {
+                screen: "messageViewer",
+                messageViewerMessage:
+                  "Introducing <em>Toastr</em>: the social way to toast! Download our App today!",
+              },
+            },
+            {
+              text: "Window",
+              value: "kitchenWindow",
+              qr: { screen: "appMarket", appMarketPreSearch: "shayd" },
+            },
+            ctx.state.roboVacLocation === "kitchen"
+              ? {
+                  text: "RoboVac",
+                  value: "roboVacActivate",
+                  qr: { screen: "appMarket", appMarketPreSearch: "robovac" },
+                }
+              : null,
+          ],
+          handler: ({ ur }) => ur,
         }
-      ],
+      ),
 
-    }, {
-      actions: ({ctx}) => [
-        { text: 'Phone', value: 'openPhone'},
-        { text: 'Living Room', value: 'livingRoom'},
-        { text: 'Refrigerator', value: globalState.wifiActive ? 'refrigeratorOpen' : 'refrigeratorLocked', qr: { screen: 'appMarket', appMarketPreSearch: 'freeze'} },
-        { text: 'Kitchen Sink', value: 'kitchenSink'},
-        // { text: 'Oven', value: 'oven'},
-        { text: 'Toaster', value: 'toaster', qr: { screen: 'messageViewer', messageViewerMessage: 'Introducing <em>Toastr</em>: the social way to toast! Download our App today!'}},
-        { text: 'Window', value: 'kitchenWindow', qr: { screen: 'appMarket', appMarketPreSearch: 'shayd'} },
-        ctx.state.roboVacLocation === 'kitchen'? { text: 'RoboVac', value: 'roboVacActivate', qr: { screen: 'appMarket', appMarketPreSearch: 'robovac'}} : null,
-      ],
-      handler: ({ur}) => ur
-    }),
-
-
-    openDoorUnlocked: [
-      {
-        text: ({ctx}) => `You turn the doorknob and${ctx.state.leftApartment ? '' : ' slowly'} pull the door open`,
-        handler: ({ur}) => ur,
-        actions: ({ctx}) => [
-          {text: 'Leave apartment', value: 'externalHallway'},
-          {text: 'Close Door', value: 'closeDoor'},
-        ],
-        before({ctx, enqueue}) {
-          if (!globalState.smartLockOpen) {
-            enqueue('openDoorLocked')
-            return false
-          }
-
-          if (ctx.state.leftApartment) setColors('#fff', '#000')
-          else setColors('#000', '#fff')
-
-          try {
-            if (!tmp.src1 || tmp.src1.isStopped) {
-              tmp.src1 = createSource('sine', 100)
-              tmp.src2 = createSource('sine', 100.1)
-
-              tmp.src1.smoothGain(MAX_VOLUME * 1.25, 1.5)
-              tmp.src2.smoothGain(MAX_VOLUME * 1.25, 1.5)
-            }
-          } catch (e) {
-            console.log(e)
-          }
-        },
-        wait: 2500,
-      },
-      {
-        text: ({ctx}) => ctx.state.leftApartment ? '' : `You stare into darkness`,
-        handler: ({ur}) => ur,
-        actions: ({ctx}) => [
-          {text: 'Leave apartment', value: 'externalHallway'},
-          {text: 'Close Door', value: 'closeDoor'},
-        ]
-      },
-    ],
-
-    ...group({
-      externalHallway: [
+      openDoorUnlocked: [
         {
-          before({ ctx }) {
-            globalState.location = 'externalHallway'
+          text: ({ ctx }) =>
+            `You turn the doorknob and${
+              ctx.state.leftApartment ? "" : " slowly"
+            } pull the door open`,
+          handler: ({ ur }) => ur,
+          actions: ({ ctx }) => [
+            { text: "Leave apartment", value: "externalHallway" },
+            { text: "Close Door", value: "closeDoor" },
+          ],
+          before({ ctx, enqueue }) {
+            if (!globalState.smartLockOpen) {
+              enqueue("openDoorLocked");
+              return false;
+            }
 
-            pluginENotepad()
+            if (ctx.state.leftApartment) setColors("#fff", "#000");
+            else setColors("#000", "#fff");
 
-            $consoleLocation.innerHTML = '???'
+            try {
+              if (!tmp.src1 || tmp.src1.isStopped) {
+                tmp.src1 = createSource("sine", 100);
+                tmp.src2 = createSource("sine", 100.1);
 
-            if (ctx.state.checkedThermostat) $consoleTemperature.innerHTML = ' — ??˚'
-            if (ctx.state.checkedAlarmClock) $consoleTime.innerHTML = ` — ??:??:??`
-
-            if (!ctx.state.leftApartment) {
-              setTimeout(async () => {
-                ctx.state.leftApartment = true
-                document.body.style.transition = '0s'
-                setColors('#ddd', '#000')
-                await waitPromise(50)
-                setColors('#111', '#fff')
-                await waitPromise(100)
-
-
-                setColors('#ddd', '#000')
-                await waitPromise(50)
-                setColors('#333', '#fff')
-
-                await waitPromise(50)
-                setColors('#fff', '#000')
-
-                setTimeout(() => {
-                  document.body.style.transition = '0.7s'
-                }, 500)
-              }, 2300)
+                tmp.src1.smoothGain(MAX_VOLUME * 1.25, 1.5);
+                tmp.src2.smoothGain(MAX_VOLUME * 1.25, 1.5);
+              }
+            } catch (e) {
+              console.log(e);
             }
           },
-          text: 'You exit your apartment and enter a hallway',
-          wait: 2100,
+          wait: 2500,
         },
         {
-          text: ({ctx}) => ctx.state.leftApartment ? '' : 'A series of LED lights flicker on and glare overhead',
-          wait: 2100
+          text: ({ ctx }) =>
+            ctx.state.leftApartment ? "" : `You stare into darkness`,
+          handler: ({ ur }) => ur,
+          actions: ({ ctx }) => [
+            { text: "Leave apartment", value: "externalHallway" },
+            { text: "Close Door", value: "closeDoor" },
+          ],
         },
-        {
-          text: 'Pipes jut out from the ceiling and recede into the narrow, white walls'
-        }
       ],
 
-      externalHallwayBack: {
-        text: 'You walk back towards the apartment door'
-      },
-    }, {
-      handler: ({ur}) => ur,
-      actions: [
-        { text: 'Reenter Apartment', value: 'reenterApartment'},
-        { text: 'Elevator', value: 'elevator'},
-        { text: 'Stairway', value: 'stairway'},
-        { text: 'Phone', value: 'openPhone'},
-      ]
-    }),
-
-    ...group({
-      elevator: {
-        text: `You approach the elevator`,
-        follow: 'elevator2',
-        wait: 1800
-      },
-      elevator2: {
-        text: `A message where the buttons should be: "Download the <em>Elevate</em> app today!"`
-      },
-
-    }, {
-      handler: ({ur}) => ur,
-      actions: [
-        { text: 'Back', value: 'externalHallwayBack'},
-        { text: 'Elevator', value: 'elevator', qr: { screen: 'appMarket', appMarketPreSearch: 'elevate'}},
-        { text: 'Phone', value: 'openPhone'},
-      ]
-    }),
-
-    stairway: [
-      {
-        text: `You approach the stairway door`,
-        wait: 1800,
-      },
-      {
-        text: `You read a sticker at eye level: "<strong style="font-size: 1.2em; text-decoration: underline">NO RE-ENTRY</strong>"`,
-        handler: ({ur}) => ur,
-        actions: [
-          { text: 'Back', value: 'externalHallwayBack'},
-          { text: 'Enter Stairway', value: 'enterStairway'},
-          { text: 'Phone', value: 'openPhone'},
-        ]
-      },
-    ],
-
-    enterStairway: {
-      before({ ctx }) {
-        globalState.location = 'stairway'
-        setColors('#000', '#939171')
-
-        if (tmp.src1 && tmp.src2) {
-          setTimeout(() => {
-            tmp.src1.stop()
-            tmp.src2.stop()
-          }, 1500)
-        }
-
-      },
-      text: `You enter the stairway and hear the door slam shut behind you`,
-      async follow() {
-        await waitPromise(2500)
-        return 'enterStairway1'
-      },
-      actions: []
-    },
-    enterStairway1: {
-      text: `The sound echos off the cement walls, spiraling around the staircase in both directions`,
-      async follow() {
-        await waitPromise(3500)
-        return 'enterStairway2'
-      },
-      actions: []
-    },
-    ...group({
-      enterStairway2: {
-        text: `You turn around and see a QR code on the door behind you`,
-      },
-      insideStairwayDoorPrimary: {
-        text: `You try opening the door, but it's locked`
-      },
-
-      stairsUp: {
-        before({ctx}) {
-          ctx.state.stairwayLevel += 1
-        },
-        text: `You walk up a flight of stairs`
-      },
-
-      stairsDown: {
-        before({ctx}) {
-          ctx.state.stairwayLevel -= 1
-        },
-        text: `You walk down a flight of stairs`
-      },
-
-    }, {
-      handler: ({ur}) => ur,
-      actions: ({ctx}) => {
-        return [
+      ...group(
         {
-          text: 'Door',
-          value: 'insideStairwayDoorPrimary',
-          // qr: ctx.state.stairwayLevel === 0
-          qr: {
-            screen: 'messageViewer',
-            messageViewerMessage: `
+          externalHallway: [
+            {
+              before({ ctx }) {
+                globalState.location = "externalHallway";
+
+                pluginENotepad();
+
+                $consoleLocation.innerHTML = "???";
+
+                if (ctx.state.checkedThermostat)
+                  $consoleTemperature.innerHTML = " — ??˚";
+                if (ctx.state.checkedAlarmClock)
+                  $consoleTime.innerHTML = ` — ??:??:??`;
+
+                if (!ctx.state.leftApartment) {
+                  setTimeout(async () => {
+                    ctx.state.leftApartment = true;
+                    document.body.style.transition = "0s";
+                    setColors("#ddd", "#000");
+                    await waitPromise(50);
+                    setColors("#111", "#fff");
+                    await waitPromise(100);
+
+                    setColors("#ddd", "#000");
+                    await waitPromise(50);
+                    setColors("#333", "#fff");
+
+                    await waitPromise(50);
+                    setColors("#fff", "#000");
+
+                    setTimeout(() => {
+                      document.body.style.transition = "0.7s";
+                    }, 500);
+                  }, 2300);
+                }
+              },
+              text: "You exit your apartment and enter a hallway",
+              wait: 2100,
+            },
+            {
+              text: ({ ctx }) =>
+                ctx.state.leftApartment
+                  ? ""
+                  : "A series of LED lights flicker on and glare overhead",
+              wait: 2100,
+            },
+            {
+              text: "Pipes jut out from the ceiling and recede into the narrow, white walls",
+            },
+          ],
+
+          externalHallwayBack: {
+            text: "You walk back towards the apartment door",
+          },
+        },
+        {
+          handler: ({ ur }) => ur,
+          actions: [
+            { text: "Reenter Apartment", value: "reenterApartment" },
+            { text: "Elevator", value: "elevator" },
+            { text: "Stairway", value: "stairway" },
+            { text: "Phone", value: "openPhone" },
+          ],
+        }
+      ),
+
+      ...group(
+        {
+          elevator: {
+            text: `You approach the elevator`,
+            follow: "elevator2",
+            wait: 1800,
+          },
+          elevator2: {
+            text: `A message where the buttons should be: "Download the <em>Elevate</em> app today!"`,
+          },
+        },
+        {
+          handler: ({ ur }) => ur,
+          actions: [
+            { text: "Back", value: "externalHallwayBack" },
+            {
+              text: "Elevator",
+              value: "elevator",
+              qr: { screen: "appMarket", appMarketPreSearch: "elevate" },
+            },
+            { text: "Phone", value: "openPhone" },
+          ],
+        }
+      ),
+
+      stairway: [
+        {
+          text: `You approach the stairway door`,
+          wait: 1800,
+        },
+        {
+          text: `You read a sticker at eye level: "<strong style="font-size: 1.2em; text-decoration: underline">NO RE-ENTRY</strong>"`,
+          handler: ({ ur }) => ur,
+          actions: [
+            { text: "Back", value: "externalHallwayBack" },
+            { text: "Enter Stairway", value: "enterStairway" },
+            { text: "Phone", value: "openPhone" },
+          ],
+        },
+      ],
+
+      enterStairway: {
+        before({ ctx }) {
+          globalState.location = "stairway";
+          setColors("#000", "#939171");
+
+          if (tmp.src1 && tmp.src2) {
+            setTimeout(() => {
+              tmp.src1.stop();
+              tmp.src2.stop();
+            }, 1500);
+          }
+        },
+        text: `You enter the stairway and hear the door slam shut behind you`,
+        async follow() {
+          await waitPromise(2500);
+          return "enterStairway1";
+        },
+        actions: [],
+      },
+      enterStairway1: {
+        text: `The sound echos off the cement walls, spiraling around the staircase in both directions`,
+        async follow() {
+          await waitPromise(3500);
+          return "enterStairway2";
+        },
+        actions: [],
+      },
+      ...group(
+        {
+          enterStairway2: {
+            text: `You turn around and see a QR code on the door behind you`,
+          },
+          insideStairwayDoorPrimary: {
+            text: `You try opening the door, but it's locked`,
+          },
+
+          stairsUp: {
+            before({ ctx }) {
+              ctx.state.stairwayLevel += 1;
+            },
+            text: `You walk up a flight of stairs`,
+          },
+
+          stairsDown: {
+            before({ ctx }) {
+              ctx.state.stairwayLevel -= 1;
+            },
+            text: `You walk down a flight of stairs`,
+          },
+        },
+        {
+          handler: ({ ur }) => ur,
+          actions: ({ ctx }) => {
+            return [
+              {
+                text: "Door",
+                value: "insideStairwayDoorPrimary",
+                // qr: ctx.state.stairwayLevel === 0
+                qr: {
+                  screen: "messageViewer",
+                  messageViewerMessage: `
               <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 420px">
-                ${logoSVG(13, '#000')}
+                ${logoSVG(13, "#000")}
                 <h1 style="text-align: center; margin-bottom: 0.25em; margin-top: 0.5em"><a href="https://steviep.xyz" target="_blank">steviep.xyz</a></h1>
                 <h2 style="text-align: center">2024</h2>
                 <div style="margin-top: 0.5em" id="completionTime"></div>
                 <button onclick="localStorage.clear(); location.reload()" style="align-self:center; margin-top: 2em">Play Again?</button>
               </div>
-            `
+            `,
+                },
+              },
+              { text: "Stairs (up)", value: "stairsUp" },
+              { text: "Stairs (down)", value: "stairsDown" },
+              { text: "Phone", value: "openPhone" },
+            ];
+          },
+        }
+      ),
+    };
+
+    window.primarySM = new StateMachine(
+      primaryStartingCtx,
+      primaryConfig,
+      primaryNodes
+    );
+
+    function rehydrate(ctx, sm) {
+      if (ctx.state.wokenUp && ctx.currentKey !== "backToSleep") {
+        $.id("sleepModal").classList.add("hidden");
+        $.id("sleepModal").classList.add("invisible");
+      }
+
+      if (primarySM.ctx.currentNode === "intro") {
+        primarySM.enqueue("intro.0");
+        setTimeout(() => primarySM.enqueue("intro.1"), 1000);
+        setTimeout(() => primarySM.enqueue("intro.2"), 2800);
+        setTimeout(() => primarySM.enqueue("bedFresh"), 4600);
+      }
+      if (primarySM.ctx.currentNode === "intro.0") {
+        primarySM.enqueue("intro.1");
+        setTimeout(() => primarySM.enqueue("intro.2"), 1000);
+        setTimeout(() => primarySM.enqueue("bedFresh"), 2800);
+      }
+      if (primarySM.ctx.currentNode === "intro.1") {
+        primarySM.enqueue("intro.2");
+        setTimeout(() => primarySM.enqueue("bedFresh"), 1000);
+      }
+      if (primarySM.ctx.currentNode === "intro.2") {
+        primarySM.goto("bedFresh.1");
+      }
+      if (primarySM.ctx.currentNode === "bedFresh")
+        primarySM.goto("bedFresh.1");
+      const $content = $.id("mainConsoleContent");
+      const $nextActions = $.id("nextActions");
+
+      if (globalState.location === "externalHallway") {
+        setColors("#fff", "#000");
+      } else if (globalState.location === "stairway") {
+        setColors("#000", "#939171");
+      } else if (globalState.lightsOn) {
+        const { light1, light2 } = globalState;
+        setColors(hsvToRGB(light1), hsvToRGB(light2));
+      } else if (globalState.shaydOpen) {
+        setColors("var(--light-color)", "var(--dark-color)");
+      }
+
+      $phoneModal.setBgMode(globalState.modelBgMode);
+
+      $consoleLocation.innerHTML = niceLocation[globalState.location];
+
+      // if (ctx.state.checkedAlarmClock) {
+      //   $consoleTime.innerHTML = ` — ${formatTime(globalState.eventLoopStartTime + (30 * 60 * 1000) - Date.now())}`
+      // }
+
+      if (ctx.state.checkedThermostat) {
+        if (
+          globalState.location === "externalHallway" ||
+          globalState.location === "stairway"
+        ) {
+          $consoleTemperature.innerHTML = " — ??˚";
+        } else {
+          $consoleTemperature.innerHTML = ctx.state.checkedThermostatTwice
+            ? " — 84˚ [CO2 LEVEL: HAZARDOUS]"
+            : " — 99˚";
+        }
+      }
+
+      clearInterval(tmp.eNotePadInterval);
+      if (globalState.eNotepadOpen) {
+        unplugENotepad();
+        if (globalState.eNotepadBattery === 0) {
+          $.id("eNotepadTextArea").blur();
+          $.id("eNotepadTextArea").value = "Battery Depleted";
+          $.id("eNotepadTextArea").classList.add("disabled");
+        }
+      } else {
+        tmp.eNotePadInterval = setInterval(() => {
+          if (globalState.eNotepadBattery < 100)
+            globalState.eNotepadBattery += 1;
+        }, 4000);
+      }
+
+      if (globalState.countdownTimeLeft > 0 && !globalState.sentFunTimeText) {
+        setTimeout(() => {
+          if ($phoneDevice.state.dataPlanActivated) {
+            $phoneDevice.newText(funTimeText);
+            globalState.sentFunTimeText = true;
           }
-        },
-        { text: 'Stairs (up)', value: 'stairsUp', },
-        { text: 'Stairs (down)', value: 'stairsDown', },
-        { text: 'Phone', value: 'openPhone'},
-      ]}
-    }),
+        }, globalState.countdownTimeLeft);
+      }
 
-  }
+      if (ctx.state.tvOn) {
+        sm.goto("turnOffTV");
+      }
 
-  window.primarySM = new StateMachine(primaryStartingCtx, primaryConfig, primaryNodes)
+      if (ctx.state.isOpen) {
+        sm.goto("closePhone");
+      }
 
+      $content.innerHTML = ctx.history
+        .filter((t) => t)
+        .map((t) => `<p>${t}</p>`)
+        .reverse()
+        .join("");
 
+      const actions = ctx.currentActions.filter((a) => !!a.value) || [];
 
-  function rehydrate(ctx, sm) {
-    if (ctx.state.wokenUp && ctx.currentKey !== 'backToSleep') {
-      $.id('sleepModal').classList.add('hidden')
-      $.id('sleepModal').classList.add('invisible')
+      const inInternetLocation =
+        globalState.location !== "externalHallway" &&
+        globalState.location !== "stairway";
+
+      const phoneNotifications = inInternetLocation
+        ? $phoneDevice?.phoneNotifications?.() || 0
+        : 0;
+      $nextActions.innerHTML = actions
+        .map(
+          (a) =>
+            `<button id="${a.value}" class="actionButton">${
+              a.text +
+              (a.text === "Phone" && phoneNotifications
+                ? ` (${phoneNotifications})`
+                : "")
+            }</button>`
+        )
+        .join("");
+      actions.forEach((a) => {
+        $.id(a.value).onclick = () => {
+          if (a.onClick) a.onClick();
+          sm.next(a.value, true);
+        };
+      });
     }
 
-    if (primarySM.ctx.currentNode === 'intro') {
-      primarySM.enqueue('intro.0')
-      setTimeout(() =>  primarySM.enqueue('intro.1'), 1000)
-      setTimeout(() =>  primarySM.enqueue('intro.2'), 2800)
-      setTimeout(() =>  primarySM.enqueue('bedFresh'), 4600)
-    }
-    if (primarySM.ctx.currentNode === 'intro.0') {
-      primarySM.enqueue('intro.1')
-      setTimeout(() =>  primarySM.enqueue('intro.2'), 1000)
-      setTimeout(() =>  primarySM.enqueue('bedFresh'), 2800)
-    }
-    if (primarySM.ctx.currentNode === 'intro.1') {
-      primarySM.enqueue('intro.2')
-      setTimeout(() =>  primarySM.enqueue('bedFresh'), 1000)
-    }
-    if (primarySM.ctx.currentNode === 'intro.2') {
-      primarySM.goto('bedFresh.1')
-    }
-    if (primarySM.ctx.currentNode === 'bedFresh') primarySM.goto('bedFresh.1')
-    const $content = $.id('mainConsoleContent')
-    const $nextActions = $.id('nextActions')
+    rehydrate(primaryStartingCtx, primarySM);
 
+    setInterval(() => {
+      if (
+        primarySM.ctx.state.roboVacLocation !== "kitchen" &&
+        primarySM.ctx.state.roboVacLastActive > 0
+      ) {
+        primarySM.ctx.state.roboVacLocation = sample([
+          "hallway",
+          "kitchen",
+          "livingRoom",
+          "bedroom",
+          "bathroom",
+        ]);
+      }
+    }, 120000);
 
+    let countdownInterval;
+    const createCountdownTimerInterval = () =>
+      setRunInterval(() => {
+        let direction = -1;
+        if (primaryStartingCtx.state.checkedAlarmClock) {
+          globalState.countdownTimeLeft += 1000 * direction;
 
-    if (globalState.location === 'externalHallway') {
-      setColors('#fff', '#000')
+          if (
+            globalState.location === "externalHallway" ||
+            globalState.location === "stairway"
+          ) {
+            $consoleTime.innerHTML = ` — ??:??:??`;
+          } else {
+            $consoleTime.innerHTML = ` — ${formatTime(
+              globalState.countdownTimeLeft
+            )}`;
+          }
 
-    } else if (globalState.location === 'stairway') {
-      setColors('#000', '#939171')
-    } else if (globalState.lightsOn) {
-      const { light1, light2 } = globalState
-      setColors(hsvToRGB(light1), hsvToRGB(light2))
-    } else if (globalState.shaydOpen) {
-      setColors('var(--light-color)', 'var(--dark-color)')
-    }
+          if (globalState.countdownTimeLeft % 60000 === 0) {
+            globalState.countdownIntervalTime *= 1.025;
+            clearInterval(countdownInterval);
+            setTimeout(() => {
+              countdownInterval = createCountdownTimerInterval();
+            }, globalState.countdownIntervalTime);
+          }
+        }
+      }, globalState.countdownIntervalTime);
 
+    countdownInterval = createCountdownTimerInterval();
 
-    $phoneModal.setBgMode(globalState.modelBgMode)
+    // const phoneStartingCtx = new CTX()
+    // const phoneConfig = {
+    //   defaultWait: 1500,
+    //   async onUpdate({ text, actions }) {
+    //     phoneStartingCtx.history.push(text)
+    //     $.id('mainConsoleContent').innerHTML += `<p>${text}</p>`
+    //     if (actions) {
+    //       phoneStartingCtx.state.currentActions = actions
+    //     }
 
-
-    $consoleLocation.innerHTML = niceLocation[globalState.location]
-
-    // if (ctx.state.checkedAlarmClock) {
-    //   $consoleTime.innerHTML = ` — ${formatTime(globalState.eventLoopStartTime + (30 * 60 * 1000) - Date.now())}`
+    //     $.id('nextActions').innerHTML = JSON.stringify(primaryStartingCtx.state.currentActions)
+    //   },
+    //   start: 'start'
     // }
 
-    if (ctx.state.checkedThermostat) {
-      if (globalState.location === 'externalHallway' || globalState.location === 'stairway') {
-        $consoleTemperature.innerHTML = ' — ??˚'
+    // window.phoneSM = new StateMachine(phoneStartingCtx, phoneConfig, phoneNodes)
 
-      } else {
-        $consoleTemperature.innerHTML = ctx.state.checkedThermostatTwice ? ' — 84˚ [CO2 LEVEL: HAZARDOUS]' : ' — 99˚'
-      }
+    if (!primarySM.ctx.history.length) {
+      primarySM.next("");
     }
 
-    clearInterval(tmp.eNotePadInterval)
-    if (globalState.eNotepadOpen) {
-      unplugENotepad()
-      if (globalState.eNotepadBattery === 0) {
-        $.id('eNotepadTextArea').blur()
-        $.id('eNotepadTextArea').value = 'Battery Depleted'
-        $.id('eNotepadTextArea').classList.add('disabled')
-      }
-    } else {
-      tmp.eNotePadInterval = setInterval(() => {
-        if (globalState.eNotepadBattery < 100) globalState.eNotepadBattery += 1
-      }, 4000)
-    }
-
-
-    if (globalState.countdownTimeLeft > 0 && !globalState.sentFunTimeText) {
-      setTimeout(() => {
-        if ($phoneDevice.state.dataPlanActivated) {
-          $phoneDevice.newText(funTimeText)
-          globalState.sentFunTimeText = true
-        }
-      }, globalState.countdownTimeLeft)
-    }
-
-
-    if (ctx.state.tvOn) {
-      sm.goto('turnOffTV')
-    }
-
-    if (ctx.state.isOpen) {
-      sm.goto('closePhone')
-    }
-
-    $content.innerHTML = ctx.history.filter(t => t).map(t => `<p>${t}</p>`).reverse().join('')
-
-    const actions = ctx.currentActions.filter(a => !!a.value) || []
-
-    const inInternetLocation = globalState.location !== 'externalHallway' && globalState.location !== 'stairway'
-
-    const phoneNotifications = inInternetLocation ? ($phoneDevice?.phoneNotifications?.() || 0) : 0
-    $nextActions.innerHTML = actions.map(a => `<button id="${a.value}" class="actionButton">${
-      a.text + (
-        a.text === 'Phone' && phoneNotifications
-          ? ` (${phoneNotifications})`
-          : ''
-      )
-    }</button>`).join('')
-    actions.forEach(a => {
-      $.id(a.value).onclick = () => {
-        if (a.onClick) a.onClick()
-        sm.next(a.value, true)
-      }
-    })
-  }
-
-  rehydrate(primaryStartingCtx, primarySM)
-
-  setInterval(() => {
-    if (primarySM.ctx.state.roboVacLocation !== 'kitchen' && primarySM.ctx.state.roboVacLastActive > 0) {
-      primarySM.ctx.state.roboVacLocation = sample(['hallway', 'kitchen', 'livingRoom', 'bedroom', 'bathroom'])
-    }
-  }, 120000)
-
-
-
-  let countdownInterval
-  const createCountdownTimerInterval = () =>  setRunInterval(() => {
-
-
-    let direction = -1
-    if (primaryStartingCtx.state.checkedAlarmClock) {
-      globalState.countdownTimeLeft += 1000 * direction
-
-      if (globalState.location === 'externalHallway' || globalState.location === 'stairway') {
-        $consoleTime.innerHTML = ` — ??:??:??`
-
-      } else {
-        $consoleTime.innerHTML = ` — ${formatTime(globalState.countdownTimeLeft)}`
-      }
-
-      if (globalState.countdownTimeLeft % 60000 === 0) {
-        globalState.countdownIntervalTime *= 1.025
-        clearInterval(countdownInterval)
-        setTimeout(() => {
-          countdownInterval = createCountdownTimerInterval()
-        }, globalState.countdownIntervalTime)
-      }
-
-    }
-
-  }, globalState.countdownIntervalTime)
-
-
-  countdownInterval = createCountdownTimerInterval()
-
-
-
-  // const phoneStartingCtx = new CTX()
-  // const phoneConfig = {
-  //   defaultWait: 1500,
-  //   async onUpdate({ text, actions }) {
-  //     phoneStartingCtx.history.push(text)
-  //     $.id('mainConsoleContent').innerHTML += `<p>${text}</p>`
-  //     if (actions) {
-  //       phoneStartingCtx.state.currentActions = actions
-  //     }
-
-  //     $.id('nextActions').innerHTML = JSON.stringify(primaryStartingCtx.state.currentActions)
-  //   },
-  //   start: 'start'
-  // }
-
-  // window.phoneSM = new StateMachine(phoneStartingCtx, phoneConfig, phoneNodes)
-
-
-
-
-
-
-  if (!primarySM.ctx.history.length) {
-    primarySM.next('')
-  }
-
-</script>
+    // Hide Farcaster frame splash screen
+    frame.sdk.actions.ready();
+  </script>
 </html>
